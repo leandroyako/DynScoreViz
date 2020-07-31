@@ -17,16 +17,15 @@
         </div>
     </div>
 
-    <%- include("./partials/footer.ejs") %>
+    <!-- <%- include("./partials/footer.ejs") %> -->
 
 
     <!-- <script src='../scripts/animate_staff.js'></script> -->
 
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="../socket.io.js"></script>
     <script>
         var socket = io();
         var object = document.querySelector(".wrapper .active");
-        // object.style.transition = "backround-color 0.2s ease 0.1;";
         socket.on('beat', function(data) {
             object.classList.add('blink');
             setTimeout(function() {
@@ -34,6 +33,10 @@
             }, 30);
 
         });
+        socket.on('update', function(data) {
+            console.log(data)
+            object.data = `../svg/${data.updateData}.cropped.svg`;
+        })
     </script>
 </body>
 

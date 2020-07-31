@@ -2,22 +2,23 @@
 <%- include("./partials/head.ejs") %>
 
 <body>
-  <%- include("./partials/nav.ejs") %>
+    <%- include("./partials/nav.ejs") %>
 
-  <div class="blogs content">
-    <% if (data.length > 0) { %>
-      <% data.forEach(part => { %>
+    <div class="blogs content">
+        <% if (data.length > 0) { %>
+        <% data.forEach(part => { %>
         <a class="single" href="/interpreter/<%= part.route %>">
-          <h3 class="title"><%= part.instrument %></h3>
-          <p class="snippet"><%= part.route %></p>
+            <h3 class="title"><%= part.instrument %></h3>
+            <p class="snippet"><%= part.route %></p>
         </a>
-      <% }) %>
-    <% } else { %>
-      <p>No hay instrumentos para mostrar...</p>
-    <% } %>
-    
-  </div>
+        <% }) %>
+        <% } else { %>
+        <p>No hay instrumentos para mostrar...</p>
+        <% } %>
 
-  <%- include("./partials/footer.ejs") %>
+    </div>
+
+    <!-- <%- include("./partials/footer.ejs") %> -->
 </body>
+
 </html>
