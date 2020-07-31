@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leandroyako/livecodeScores.git"
+    "url": "https://github.com/leandroyako/livecodeScores.git"
   },
   "author": "leandro yako",
   "license": "GPL 3.0",
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "node-localstorage": "^2.1.6",
+    "osc-js": "^2.1.0",
     "supertest": "^4.0.2"
   }
 }

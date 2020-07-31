@@ -41,7 +41,44 @@ app.use((req, res) => {
   res.status(404).render('404', { title: '404' });
 });
 
+//OSC
 
+const OSC = require('osc-js')
+
+const options = {
+  type: 'udp4',         // @param {string} 'udp4' or 'udp6'
+  open: {
+    host: 'localhost',    // @param {string} Hostname of udp server to bind to
+    port: 9912,          // @param {number} Port of udp server to bind to
+    exclusive: false      // @param {boolean} Exclusive flag
+  },
+  send: {
+    host: 'localhost',    // @param {string} Hostname of udp client for messaging
+    port: 57120           // @param {number} Port of udp client for messaging
+  }
+}
+
+const osc = new OSC({ plugin: new OSC.DatagramPlugin(options) })
+
+osc.open() // start a WebSocket server on port 8080
+
+osc.on('/param/density', (message, rinfo) => {
+  console.log(message.args)
+  console.log(rinfo)
+})
+
+osc.on('*', message => {
+  console.log(message.args)
+})
+
+osc.on('/{foo,bar}/*/param', message => {
+  console.log(message.args)
+})
+
+osc.on('open', () => {
+  const message = new OSC.Message('/status', 'connected')
+  osc.send(message)
+})
 
 /// test
 

@@ -1,4 +1,4 @@
-const { result } = require('lodash');
+//const { result } = require('lodash');
 const Editor = require('../models/composerModel');
 
 const editor = new Editor();
@@ -44,7 +44,6 @@ const delete_part = (req, res) => {
 
   res.redirect('/');
 }
-
 
 module.exports = {
   index,
