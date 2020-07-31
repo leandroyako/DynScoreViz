@@ -1,0 +1,7 @@
+<% var currInstrument = JSON.parse(localStorage.currentInstrument) %>
+<nav>
+  <ul>
+    <li><a href="/interpreter">Elegir instrumento</a></li>
+    <li><a href="/interpreter/<%= currInstrument %>">Partitura</a></li>
+  </ul>
+</nav>

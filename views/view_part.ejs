@@ -1,0 +1,24 @@
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+<link rel="stylesheet" href="../css/view_part.css">
+
+<body>
+  <%- include("./partials/nav.ejs") %>
+  <% staves = JSON.parse(data) %>
+  <div class="details content">
+
+    <div class="wrapper">
+      <object class="hidden" id="current" type='image/svg+xml' data="../svg/<%= staves[1].svg %>"> Actual score
+      </object>
+      <object class="visible active" id="prev" type='image/svg+xml' data="../svg/<%= staves[0].svg %>"> Previous score
+      </object>
+      <p id="txt"></p>
+    </div>
+  </div>
+
+  <%- include("./partials/footer.ejs") %>
+
+  <script src='../scripts/animate_staff.js'></script>
+</body>
+
+</html>

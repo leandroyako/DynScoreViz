@@ -1,0 +1,23 @@
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+
+<body>
+  <%- include("./partials/nav.ejs") %>
+
+  <div class="blogs content">
+    <% if (data.length > 0) { %>
+      <% data.forEach(instrument => { %>
+        <a class="single" href="/interpreter/<%= instrument.route %>">
+          <h3 class="title"><%= instrument.name %></h3>
+          <p class="snippet"><%= instrument.route %></p>
+        </a>
+      <% }) %>
+    <% } else { %>
+      <p>No hay instrumentos para mostrar...</p>
+    <% } %>
+    
+  </div>
+
+  <%- include("./partials/footer.ejs") %>
+</body>
+</html>

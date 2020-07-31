@@ -1,0 +1,29 @@
+{
+  "name": "livecode-scores",
+  "version": "1.0.0",
+  "description": "livecode musical scores with SuperCollider and Lilypond",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leandroyako/livecodeScores.git"
+  },
+  "author": "leandro yako",
+  "license": "GPL 3.0",
+  "bugs": {
+    "url": "https://github.com/leandroyako/livecodeScores/issues"
+  },
+  "homepage": "https://github.com/leandroyako/livecodeScores#readme",
+  "dependencies": {
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "node-localstorage": "^2.1.6",
+    "supertest": "^4.0.2"
+  }
+}
