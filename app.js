@@ -4,11 +4,9 @@ const express = require('express');
 const morgan = require('morgan');
 const composerRoutes = require('./routes/composerRoutes');
 const interpreterRoutes = require('./routes/interpreterRoutes');
-const abletonlink = require('abletonlink');
 
 // express app
 const app = express();
-// app.listen(3000);
 
 // register view engine
 app.set('view engine', 'ejs');
@@ -44,86 +42,11 @@ app.use((req, res) => {
     });
 });
 
-const server = require('http').createServer(app);
-server.listen(3000, () => {
-    console.log("**** listen on localhost:3000 ****");
-    console.log("access to http://localhost:3000/ !!");
-});
+// load server, websockets, link, osc server and call its constructor, passing the app, server and socket objects in order
+// that module constructor function will return each object 
+const server = require('./server')(app);
+const io = require('./io')(server);
+const abletonLink = require('./abletonLink')(io);
+const osc = require('./osc')(io);
 
-// Ableton Link
-const io = require('socket.io')(server);
-
-io.on('connection', function(client) {
-    client.on('event', function(data) {});
-    client.on('disconnect', function() {});
-});
-
-const link = new abletonlink();
-
-const emitBeats = () => {
-    let lastBeat = 0.0;
-    link.startUpdate(60, (beat, phase, bpm) => {
-        beat = 0 ^ beat;
-        if (0 < beat - lastBeat) {
-            io.emit('beat', {
-                beat
-            });
-            lastBeat = beat;
-        }
-    });
-}
-
-emitBeats();
-
-
-//OSC
-const OSC = require('osc-js');
-
-const options = {
-    type: 'udp4', // @param {string} 'udp4' or 'udp6'
-    open: {
-        host: 'localhost', // @param {string} Hostname of udp server to bind to
-        port: 9912, // @param {number} Port of udp server to bind to
-        exclusive: false // @param {boolean} Exclusive flag
-    },
-    send: {
-        host: 'localhost', // @param {string} Hostname of udp client for messaging
-        port: 57120 // @param {number} Port of udp client for messaging
-    }
-}
-
-const osc = new OSC({
-    plugin: new OSC.DatagramPlugin(options)
-})
-
-osc.open()
-
-// osc.on('/param/density', (message, rinfo) => {
-//   console.log(message.args)
-//   console.log(rinfo)
-// })
-
-osc.on('*', message => {
-    console.log(message.args);
-    const route = message.args[0];
-    const file = message.args[1];
-    emitUpdate(`${route}/${file}`)
-})
-
-// osc.on('/{foo,bar}/*/param', message => {
-//     console.log(message.args)
-// })
-
-osc.on('open', () => {
-    const message = new OSC.Message('/status', 'LivecodeScores connected')
-    osc.send(message)
-})
-
-const emitUpdate = updateData => {
-    io.emit('update', {
-        updateData
-    })
-}
-
-// Export the app object
-module.exports = app
+module.exports = app;
