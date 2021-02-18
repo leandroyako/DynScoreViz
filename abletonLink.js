@@ -4,9 +4,12 @@ module.exports = function(io) {
     const abletonlink = require('abletonlink');
     const link = new abletonlink();
 
-    const emitBeats = () => {
+    const updateLink = () => {
         let lastBeat = 0.0;
+        let lastBpm = 0;
+
         link.startUpdate(60, (beat, phase, bpm) => {
+            //Beats
             beat = 0 ^ beat;
             if (0 < beat - lastBeat) {
                 io.emit('beat', {
@@ -14,10 +17,19 @@ module.exports = function(io) {
                 });
                 lastBeat = beat;
             }
+            //BPM
+            if (bpm != lastBpm) {
+                io.emit('bpm', {
+                    bpm
+                });
+                lastBpm = bpm;
+                //    console.log(bpm);
+            }
         });
     };
 
-    emitBeats();
 
+
+    updateLink();
     return link;
 };

@@ -1,6 +1,7 @@
 module.exports = function(io) {
     //OSC
     const OSC = require('osc-js');
+    const editor = require('./controllers/composerController.js').editor;
 
     const options = {
         type: 'udp4', // @param {string} 'udp4' or 'udp6'
@@ -25,14 +26,6 @@ module.exports = function(io) {
     //   console.log(message.args)
     //   console.log(rinfo)
     // })
-
-    osc.on('*', message => {
-        console.log(message.args);
-        const route = message.args[0];
-        const file = message.args[1];
-        emitUpdate(`${route}/${file}`)
-    })
-
     // osc.on('/{foo,bar}/*/param', message => {
     //     console.log(message.args)
     // })
@@ -42,9 +35,28 @@ module.exports = function(io) {
         osc.send(message)
     })
 
+    osc.on('newStaff', message => {
+        //console.log(message.args);
+        const route = message.args[0];
+        const file = message.args[1];
+        emitUpdate(`${route}/${file}`)
+    })
+
     const emitUpdate = updateData => {
         io.emit('update', {
             updateData
         })
     }
+
+    osc.on('newPart', message => {
+        console.log(message.args);
+        const instrument = message.args[0];
+        const route = instrument.replace(/ /g, '').toLowerCase(); //move upper tree, delete duplicate code
+        const part = {
+            instrument,
+            route
+        };
+        editor.addPart(part);
+    })
+
 }

@@ -1,7 +1,5 @@
-const {
-    result
-} = require('lodash');
-const Interpreter = require('../models/interpreterModel'); //sin uso?
+//const { result } = require('lodash');
+//const Interpreter = require('../models/interpreterModel'); //sin uso?
 
 const index = (req, res) => {
     const parts = JSON.parse(localStorage.getItem('parts'));
@@ -17,9 +15,11 @@ const view_part = (req, res) => {
     localStorage.setItem("currentInstrument", JSON.stringify(route));
     const index = parts.findIndex(instrument => instrument.route == route);
     const staves = localStorage.getItem(parts[index].route);
-    console.log(staves);
+    // console.log(staves[0]);
+    // console.log(route);
     res.render('view_part', {
-        data: staves
+        data: staves,
+        route: route
     });
 }
 
