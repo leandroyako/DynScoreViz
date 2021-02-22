@@ -1,3 +1,5 @@
+const http = require("http")
+
 module.exports = function(io) {
     //OSC
     const OSC = require('osc-js');
@@ -50,6 +52,7 @@ module.exports = function(io) {
 
     osc.on('newPart', message => {
         console.log(message.args);
+        /*
         const instrument = message.args[0];
         const route = instrument.replace(/ /g, '').toLowerCase(); //move upper tree, delete duplicate code
         const part = {
@@ -57,6 +60,27 @@ module.exports = function(io) {
             route
         };
         editor.addPart(part);
+*/
+
+        http
+            .request({
+                    hostname: "localhost",
+                    port: 3000,
+                    path: encodeURI(`/composer/add/${message.args[0]}`)
+                },
+                res => {
+                    let data = ""
+
+                    res.on("data", d => {
+                        data += d
+                    })
+                    res.on("end", () => {
+                        console.log(data)
+                    })
+                }
+            )
+            .end()
+
     })
 
 }

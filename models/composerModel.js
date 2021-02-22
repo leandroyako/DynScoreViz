@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 class editorModel {
     constructor() {
         //     let instrument; 
@@ -12,36 +14,54 @@ class editorModel {
         this.staves = JSON.parse(stored) || []
     }
 
-    _pickPart(instrument) {
-        this.instrument = instrument;
-        this.route = 'parts';
-        const stored = localStorage.getItem('parts');
-        this.parts = JSON.parse(stored) || []
+    _createInstrument(instrument) {
+        localStorage.getItem(instrument) ||
+            localStorage.setItem(instrument, JSON.stringify([]))
+    }
+
+    _pickParts() {
+        localStorage.getItem('parts') ||
+            localStorage.setItem('parts', JSON.stringify([]));
+
+        this.parts = JSON.parse(localStorage.getItem('parts'))
     }
 
     _commit(changes) {
-        //this.onStaffListChanged(staves)
+        console.log(this.route);
+        console.log(changes);
         localStorage.setItem(this.route, JSON.stringify(changes))
     }
 
+    _createDir(dir) { // create new directory
+
+        const svgPath = `./public/svg/${dir}`;
+
+        fs.mkdir(svgPath, {
+            recursive: true
+        }, (err) => {
+            if (err) throw err;
+        });
+    }
+
     addPart(newPart) {
-        this._pickPart(newPart.instrument);
+        this.route = 'parts';
+        this._pickParts(); //parse parts
+        this._createDir(newPart.route);
+        this._createInstrument(newPart.route);
+        //console.log("Adding new part to:")
+        //console.log(this.parts);
 
         const part = {
-            id: this.parts.length > 0
-                ? this.parts[this.parts.length - 1].id + 1
-                : 0,
+            id: this.parts ? 0 : this.parts[this.parts.length - 1].id + 1,
             route: newPart.route,
             instrument: newPart.instrument,
         }
 
-        if (!this.parts.includes(newPart.instrument)) {
-
+        if (!JSON.stringify(this.parts).includes(newPart.instrument)) {
             this.parts.push(part);
             this._commit(this.parts);
-            console.log("New part added");
-        }
-        else {
+            console.log(`New part added: ${newPart.instrument}`);
+        } else {
             console.log("Part already exists");
         }
     }
@@ -50,9 +70,8 @@ class editorModel {
         this._pickInstrument(newStaff.instrument);
 
         const staff = {
-            id: this.staves.length > 0
-                ? this.staves[this.staves.length - 1].id + 1
-                : 0,
+            id: this.staves.length > 0 ?
+                this.staves[this.staves.length - 1].id + 1 : 0,
             svg: newStaff.svg,
             route: newStaff.route,
             instrument: newStaff.instrument,
@@ -66,9 +85,14 @@ class editorModel {
         this._pickInstrument(updatedStaff.instrument);
 
         this.staves = this.staves.map(staff =>
-            staff.id === id
-                ? { id: staff.id, instrument: updatedStaff.instrument, route: updatedStaff.route, svg: updatedStaff.svg, complete: staff.complete }
-                : staff,
+            staff.id === id ? {
+                id: staff.id,
+                instrument: updatedStaff.instrument,
+                route: updatedStaff.route,
+                svg: updatedStaff.svg,
+                complete: staff.complete
+            } :
+            staff,
         )
 
         this._commit(this.staves);
@@ -86,9 +110,14 @@ class editorModel {
     toggleStaff(instrument, id) {
         this._pickInstrument(instrument);
         this.staves = this.staves.map(staff =>
-            staff.id === id
-                ? { id: staff.id, instrument: staff.instrument, route: staff.route, svg: staff.svg, complete: !staff.complete }
-                : staff,
+            staff.id === id ? {
+                id: staff.id,
+                instrument: staff.instrument,
+                route: staff.route,
+                svg: staff.svg,
+                complete: !staff.complete
+            } :
+            staff,
         );
 
         this._commit(this.staves);

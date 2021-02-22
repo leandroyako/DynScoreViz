@@ -59,7 +59,7 @@ const delete_part = (req, res) => {
 }
 
 module.exports = {
-    editor,
+    //editor,
     index,
     view_part,
     add_part,
