@@ -8,9 +8,9 @@
     <% staves = JSON.parse(data) %>
 
     <div class="wrapper">
-        <object class="visible inactive" type='image/svg+xml' data="../svg/<%= route %>/<%= staves[1].svg %>"> Actual score
+        <object class="visible inactive" type='image/svg+xml' data="../svg/<%= route %>/<%= staves[staves.length -2].svg %>.cropped.svg"> Actual score
         </object>
-        <object class="visible active" type='image/svg+xml' data="../svg/<%= route %>/<%= staves[0].svg %>"> Previous score
+        <object class="visible active" type='image/svg+xml' data="../svg/<%= route %>/<%= staves[staves.length -1].svg %>.cropped.svg"> Previous score
         </object>
         <p id="txt"></p>
     </div>
@@ -34,6 +34,16 @@
         var bpmDisplay = document.querySelector(".metronome .bpm");
         var metronomeBox = document.querySelector(".metronome");
 
+        function update(data) {
+            let oldObjectData = activeObject.data;
+            inactiveObject.data = oldObjectData;
+            activeObject.data = `../svg/${data.route}/${data.svg}.cropped.svg`;
+
+            console.log(oldObjectData);
+            console.log(inactiveObject);
+            console.log(activeObject);
+        };
+
         socket.on('beat', function(data) {
             metronomeBox.classList.add('blink');
             setTimeout(function() {
@@ -42,21 +52,12 @@
         });
 
         socket.on('bpm', function(data) {
-            //console.log(data);
             bpmDisplay.innerHTML = data.bpm;
         });
 
 
         socket.on('update', function(data) {
-            //console.log(data)
-            let oldObjectData = activeObject.data;
-            inactiveObject.data = oldObjectData;
-            activeObject.data = `../svg/${data.route}/${data.svg}.cropped.svg`;
-
-            console.log(oldObjectData);
-            console.log(inactiveObject);
-            console.log(activeObject);
-
+            update(data)
         })
     </script>
 </body>
