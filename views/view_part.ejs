@@ -38,9 +38,12 @@
 
 
         let data = '<%- data%>';
-        console.log(data);
+        //       console.log(data);
+        let route = '<%- route%>';
+        console.log(`current route: ${route}`);
+
         let staves = JSON.parse(data);
-        console.log(staves);
+        //        console.log(staves);
 
         function initStaff(staves) {
             if (staves.length > 0) {
@@ -95,7 +98,7 @@
         });
 
         socket.on('update', function(data) {
-            update(data)
+            data.route == route ? update(data) : console.log(data.route)
         })
     </script>
 </body>
