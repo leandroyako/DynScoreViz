@@ -21,8 +21,6 @@
     </div>
 
     <!-- <%- include("./partials/footer.ejs") %> -->
-
-
     <!-- <script src='../scripts/animate_staff.js'></script> -->
 
     <script src="../socket.io.js"></script>
@@ -38,12 +36,8 @@
 
 
         let data = '<%- data%>';
-        //       console.log(data);
         let route = '<%- route%>';
-        console.log(`current route: ${route}`);
-
         let staves = JSON.parse(data);
-        //        console.log(staves);
 
         function initStaff(staves) {
             if (staves.length > 0) {
@@ -51,13 +45,11 @@
                 activeObjectSvgRoute = `../svg/${staves[index].route}/${staves[index].svg}.cropped.svg`
                 activeObject.data = activeObjectSvgRoute
                 activeObject.classList.remove('hidden')
-                console.log("Hay al menos un compas")
                 if (staves.length > 1) {
                     const index = staves.length - 2;
                     inactiveObjectSvgRoute = `../svg/${staves[index].route}/${staves[index].svg}.cropped.svg`
                     inactiveObject.data = inactiveObjectSvgRoute
                     inactiveObject.classList.remove('hidden')
-                    console.log("Hay al menos dos compases")
                 }
             } else {
                 document.getElementById("txt").innerHTML = "Esperando partitura...";
@@ -68,8 +60,6 @@
         function update(data) {
             document.getElementById("txt").innerHTML = ""
             let oldObjectSvgRoute = activeObjectSvgRoute
-
-            console.log(`oldObjectSvgRoute: ${oldObjectSvgRoute}`)
 
             if (oldObjectSvgRoute) {
                 inactiveObject.classList.remove('hidden')
@@ -98,7 +88,9 @@
         });
 
         socket.on('update', function(data) {
-            data.route == route ? update(data) : console.log(data.route)
+            if (data.route == route) {
+                update(data)
+            }
         })
     </script>
 </body>
