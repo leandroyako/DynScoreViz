@@ -11,6 +11,7 @@ class editorModel {
         this.instrument = instrument;
         this.route = instrument.replace(/ /g, '').toLowerCase();
         const stored = localStorage.getItem(this.route);
+        console.log(stored);
         this.staves = JSON.parse(stored) || []
     }
 
@@ -52,7 +53,7 @@ class editorModel {
         //console.log(this.parts);
 
         const part = {
-            id: this.parts ? 0 : this.parts[this.parts.length - 1].id + 1,
+            id: this.parts.id ? this.parts[this.parts.length - 1].id + 1 : 0,
             route: newPart.route,
             instrument: newPart.instrument,
         }
@@ -70,8 +71,7 @@ class editorModel {
         this._pickInstrument(newStaff.instrument);
 
         const staff = {
-            id: this.staves.length > 0 ?
-                this.staves[this.staves.length - 1].id + 1 : 0,
+            id: this.staves.id ? this.staves[this.staves.length - 1].id + 1 : 0,
             svg: newStaff.svg,
             route: newStaff.route,
             instrument: newStaff.instrument,

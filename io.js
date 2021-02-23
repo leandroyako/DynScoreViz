@@ -1,10 +1,14 @@
-module.exports = function(server) {
+let io;
 
-    const io = require('socket.io')(server);
-
-    io.on('connection', function(client) {
-        client.on('event', function(data) {});
-        client.on('disconnect', function() {});
-    });
-    return io;
-};
+module.exports = {
+    init: (server) => {
+        io = require('socket.io')(server);
+        return io;
+    },
+    get: () => {
+        if (!io) {
+            throw new Error("socket is not initialized");
+        }
+        return io;
+    }
+}

@@ -1,13 +1,32 @@
 const LocalStorage = require('node-localstorage').LocalStorage;
 localStorage = new LocalStorage('./localStorage');
+
 const express = require('express');
 const morgan = require('morgan');
-const composerRoutes = require('./routes/composerRoutes');
-const interpreterRoutes = require('./routes/interpreterRoutes');
 
 // express app
 const app = express();
+// load server, websockets, link, osc server and call its constructor, passing the app, server and socket objects in order
+// that module constructor function will return each object 
+const server = require('./server')(app);
+const io = require('./io').init(server);
 
+io.on('connection', function(client) {
+    console.log('Connection success', client.id);
+    client.on('event', function(data) {
+        console.log('Event data', data)
+    });
+    client.on('disconnect', function() {
+        'Connection disconnected',
+        client.id
+    });
+});
+
+const abletonLink = require('./abletonLink')(io);
+const osc = require('./osc');
+
+const interpreterRoutes = require('./routes/interpreterRoutes');
+const composerRoutes = require('./routes/composerRoutes'); //uses socket.io internally
 // register view engine
 app.set('view engine', 'ejs');
 
@@ -42,11 +61,6 @@ app.use((req, res) => {
     });
 });
 
-// load server, websockets, link, osc server and call its constructor, passing the app, server and socket objects in order
-// that module constructor function will return each object 
-const server = require('./server')(app);
-const io = require('./io')(server);
-const abletonLink = require('./abletonLink')(io);
-const osc = require('./osc')(io);
+
 
 module.exports = app;

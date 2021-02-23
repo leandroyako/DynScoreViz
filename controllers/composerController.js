@@ -1,7 +1,6 @@
-//const { result } = require('lodash');
 const Editor = require('../models/composerModel');
-
 const editor = new Editor();
+const io = require('../io').get();
 
 const index = (req, res) => {
     const parts = JSON.parse(localStorage.getItem('parts'));
@@ -32,7 +31,7 @@ const add_part = (req, res) => {
         route
     };
     editor.addPart(part);
-    res.redirect('/');
+    res.redirect('/'); //wrong path?
 }
 
 const add_part_svg = (req, res) => {
@@ -45,6 +44,10 @@ const add_part_svg = (req, res) => {
         svg
     };
     editor.addStaff(staff);
+    io.emit('update', {
+        route,
+        svg
+    })
     res.redirect(`../interpreter/${route}`);
 }
 
@@ -59,7 +62,6 @@ const delete_part = (req, res) => {
 }
 
 module.exports = {
-    //editor,
     index,
     view_part,
     add_part,

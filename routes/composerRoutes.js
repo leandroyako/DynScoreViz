@@ -1,7 +1,6 @@
 const express = require('express');
-const composerController = require('../controllers/composerController');
-
 const router = express.Router();
+const composerController = require('../controllers/composerController');
 
 router.get('/', composerController.index);
 router.get('/:route', composerController.view_part);
