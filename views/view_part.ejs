@@ -5,12 +5,11 @@
 <body>
 
     <%- include("./partials/nav.ejs") %>
-    <% staves = JSON.parse(data) %>
 
     <div class="wrapper">
-        <object class="visible inactive" type='image/svg+xml' data="../svg/<%= route %>/<%= staves[staves.length -2].svg %>.cropped.svg"> Actual score
+        <object class="hidden inactive" type='image/svg+xml' data=""> Previous score
         </object>
-        <object class="visible active" type='image/svg+xml' data="../svg/<%= route %>/<%= staves[staves.length -1].svg %>.cropped.svg"> Previous score
+        <object class="hidden active" type='image/svg+xml' data=""> Actual score
         </object>
         <p id="txt"></p>
     </div>
@@ -27,19 +26,59 @@
     <!-- <script src='../scripts/animate_staff.js'></script> -->
 
     <script src="../socket.io.js"></script>
+
     <script>
         var socket = io();
         var activeObject = document.querySelector(".wrapper .active");
         var inactiveObject = document.querySelector(".wrapper .inactive");
         var bpmDisplay = document.querySelector(".metronome .bpm");
         var metronomeBox = document.querySelector(".metronome");
+        var activeObjectSvgRoute;
+        var inactiveObjectSvgRoute;
+
+
+        let data = '<%- data%>';
+        console.log(data);
+        let staves = JSON.parse(data);
+        console.log(staves);
+
+        function initStaff(staves) {
+            if (staves.length > 0) {
+                const index = staves.length - 1
+                activeObjectSvgRoute = `../svg/${staves[index].route}/${staves[index].svg}.cropped.svg`
+                activeObject.data = activeObjectSvgRoute
+                activeObject.classList.remove('hidden')
+                console.log("Hay al menos un compas")
+                if (staves.length > 1) {
+                    const index = staves.length - 2;
+                    inactiveObjectSvgRoute = `../svg/${staves[index].route}/${staves[index].svg}.cropped.svg`
+                    inactiveObject.data = inactiveObjectSvgRoute
+                    inactiveObject.classList.remove('hidden')
+                    console.log("Hay al menos dos compases")
+                }
+            } else {
+                document.getElementById("txt").innerHTML = "Esperando partitura...";
+            }
+        }
+        initStaff(staves);
 
         function update(data) {
-            let oldObjectData = activeObject.data;
-            inactiveObject.data = oldObjectData;
-            activeObject.data = `../svg/${data.route}/${data.svg}.cropped.svg`;
+            document.getElementById("txt").innerHTML = ""
+            let oldObjectSvgRoute = activeObjectSvgRoute
 
-            console.log(oldObjectData);
+            console.log(`oldObjectSvgRoute: ${oldObjectSvgRoute}`)
+
+            if (oldObjectSvgRoute) {
+                inactiveObject.classList.remove('hidden')
+                inactiveObject.data = oldObjectSvgRoute
+            }
+
+            activeObject.classList.remove('hidden')
+            activeObjectSvgRoute = `../svg/${data.route}/${data.svg}.cropped.svg`
+            activeObject.data = activeObjectSvgRoute
+
+
+            console.log(oldObjectSvgRoute);
             console.log(inactiveObject);
             console.log(activeObject);
         };
@@ -54,7 +93,6 @@
         socket.on('bpm', function(data) {
             bpmDisplay.innerHTML = data.bpm;
         });
-
 
         socket.on('update', function(data) {
             update(data)
