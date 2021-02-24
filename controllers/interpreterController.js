@@ -2,7 +2,8 @@
 //const Interpreter = require('../models/interpreterModel'); //sin uso?
 
 const index = (req, res) => {
-    const parts = JSON.parse(localStorage.getItem('parts'));
+    localStorage.getItem('parts') || localStorage.setItem('parts', JSON.stringify([]))
+    const parts = JSON.parse(localStorage.getItem('parts'))
     res.render('index', {
         data: parts,
         title: 'Elegir Instrumento'

@@ -2,9 +2,7 @@ const fs = require('fs');
 
 class editorModel {
     constructor() {
-        //     let instrument; 
-        //     let staves; 
-        //     let route;
+
     }
 
     _pickInstrument(instrument) {
