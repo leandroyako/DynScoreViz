@@ -1,15 +1,43 @@
-div .wrapper {
-    height: 100%
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
 }
 
-object {
-    width: 100%;
+.metronome {
+    float: right;
 }
+
+.grid {
+    display: grid;
+    grid-gap: 2%;
+    grid-template-rows: 45vh 45vh;
+    height: 100vh;
+}
+
+.grid object {
+    height: 100%;
+}
+
+/*
+.one {
+    grid-row: 1;
+}
+
+.two {
+    grid-row: 2;
+}
+*/
+
+/*
+.grid object {
+    display: block;
+    object-fit: cover;
+}
+*/
 
 .active {
     border: 1px solid #b6bdc3;
-    width: 99%;
-    margin: 0 auto;
 }
 
 /* Fade-In Effect */
