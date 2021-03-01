@@ -5,20 +5,18 @@
 <body>
 
     <%- include("./partials/nav.ejs") %>
-
-    <div class="wrapper">
-        <object class="hidden inactive" type='image/svg+xml' data=""> Previous score
-        </object>
-        <object class="hidden active" type='image/svg+xml' data=""> Actual score
-        </object>
-        <p id="txt"></p>
+    <div class="metronome">
+        <p class="bpm">0</p>
     </div>
 
-    <div class="details content">
-        <div class="metronome">
-            <p class="bpm" style="margin-bottom: 0px; padding-bottom: 0px;">120</p>
-        </div>
+    <div class="grid staves">
+        <object class="hidden active one" type='image/svg+xml' data=""> Actual score
+        </object>
+        <object class="hidden inactive two" type='image/svg+xml' data=""> Previous score
+        </object>
     </div>
+
+
 
     <!-- <%- include("./partials/footer.ejs") %> -->
     <!-- <script src='../scripts/animate_staff.js'></script> -->
@@ -26,9 +24,34 @@
     <script src="../socket.io.js"></script>
 
     <script>
+        var nav = document.querySelector("nav");
+
+        function toggleNav() {
+            nav.classList.toggle("hide");
+        }
+
+        document.addEventListener('click', function(event) {
+            toggleNav()
+        });
+
+
+        /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
+        var prevScrollpos = window.pageYOffset;
+        window.onscroll = function() {
+            var currentScrollPos = window.pageYOffset;
+            if (prevScrollpos > currentScrollPos) {
+                toggleNav()
+            } else {
+                toggleNav()
+            }
+            prevScrollpos = currentScrollPos;
+        }
+    </script>
+
+    <script>
         var socket = io();
-        var activeObject = document.querySelector(".wrapper .active");
-        var inactiveObject = document.querySelector(".wrapper .inactive");
+        var activeObject = document.querySelector(".staves .active");
+        var inactiveObject = document.querySelector(".staves .inactive");
         var bpmDisplay = document.querySelector(".metronome .bpm");
         var metronomeBox = document.querySelector(".metronome");
         var activeObjectSvgRoute;
@@ -52,13 +75,13 @@
                     inactiveObject.classList.remove('hidden')
                 }
             } else {
-                document.getElementById("txt").innerHTML = "Esperando partitura...";
+                activeObject.innerHTML = "Esperando partitura...";
             }
         }
         initStaff(staves);
 
         function update(data) {
-            document.getElementById("txt").innerHTML = ""
+            activeObject.innerHTML = ""
             let oldObjectSvgRoute = activeObjectSvgRoute
 
             if (oldObjectSvgRoute) {
