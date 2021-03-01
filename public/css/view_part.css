@@ -10,13 +10,16 @@
 
 .grid {
     display: grid;
-    grid-gap: 2%;
-    grid-template-rows: 45vh 45vh;
+    grid-gap: 3vh;
+    grid-template-rows: 48vh 48vh;
     height: 100vh;
+    place-items: center;
 }
 
 .grid object {
     height: 100%;
+    max-width: 100vh;
+    pointer-events: none;
 }
 
 /*

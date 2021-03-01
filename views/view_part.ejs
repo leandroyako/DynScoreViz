@@ -8,12 +8,15 @@
     <div class="metronome">
         <p class="bpm">0</p>
     </div>
-
-    <div class="grid staves">
-        <object class="hidden active one" type='image/svg+xml' data=""> Actual score
-        </object>
-        <object class="hidden inactive two" type='image/svg+xml' data=""> Previous score
-        </object>
+    <div class="wrapper">
+        <div class="grid staves">
+            <object id="svg1" class="hidden active one" type='image/svg+xml' data=""> Actual score
+                <img src="/svg-no.png" alt="No SVG support">
+            </object>
+            <object id="svg2" class="hidden inactive two" type='image/svg+xml' data=""> Previous score
+                <img src="/svg-no.png" alt="No SVG support">
+            </object>
+        </div>
     </div>
 
 
@@ -22,6 +25,42 @@
     <!-- <script src='../scripts/animate_staff.js'></script> -->
 
     <script src="../socket.io.js"></script>
+    <script>
+        /* Get the documentElement (<html>) to display the page in fullscreen */
+        var elem = document.documentElement;
+        var isFullScreen = false;
+        /* View in fullscreen */
+        function openFullscreen() {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                /* IE11 */
+                elem.msRequestFullscreen();
+            }
+            isFullScreen = true
+        }
+
+        /* Close fullscreen */
+        function closeFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                /* Safari */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                /* IE11 */
+                document.msExitFullscreen();
+            }
+            isFullScreen = false
+        }
+
+        document.addEventListener('dblclick', function(event) {
+            isFullScreen ? closeFullscreen() : openFullscreen()
+        });
+    </script>
 
     <script>
         var nav = document.querySelector("nav");
@@ -31,9 +70,19 @@
         }
 
         document.addEventListener('click', function(event) {
-            toggleNav()
+            toggleNav();
         });
 
+        /*
+        var objects = document.querySelectorAll("object");
+
+        objects.forEach(function(el) {
+            //console.log(el);
+            el.addEventListener('click', function(event) {
+                toggleNav()
+            }, false)
+        });
+*/
 
         /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
         var prevScrollpos = window.pageYOffset;
@@ -76,6 +125,8 @@
                 }
             } else {
                 activeObject.innerHTML = "Esperando partitura...";
+                inactiveObject.innerHTML = "Esperando partitura...";
+
             }
         }
         initStaff(staves);
