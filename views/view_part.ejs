@@ -10,10 +10,10 @@
     </div>
     <div class="wrapper">
         <div class="grid staves">
-            <object id="svg1" class="hidden active one" type='image/svg+xml' data=""> Actual score
+            <object class="hidden active one" type='image/svg+xml' data=""> Actual score
                 <img src="/svg-no.png" alt="No SVG support">
             </object>
-            <object id="svg2" class="hidden inactive two" type='image/svg+xml' data=""> Previous score
+            <object class="hidden inactive two" type='image/svg+xml' data=""> Previous score
                 <img src="/svg-no.png" alt="No SVG support">
             </object>
         </div>
@@ -26,147 +26,12 @@
 
     <script src="../socket.io.js"></script>
     <script>
-        /* Get the documentElement (<html>) to display the page in fullscreen */
-        var elem = document.documentElement;
-        var isFullScreen = false;
-        /* View in fullscreen */
-        function openFullscreen() {
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) {
-                /* Safari */
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) {
-                /* IE11 */
-                elem.msRequestFullscreen();
-            }
-            isFullScreen = true
-        }
-
-        /* Close fullscreen */
-        function closeFullscreen() {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                /* Safari */
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                /* IE11 */
-                document.msExitFullscreen();
-            }
-            isFullScreen = false
-        }
-
-        document.addEventListener('dblclick', function(event) {
-            isFullScreen ? closeFullscreen() : openFullscreen()
-        });
-    </script>
-
-    <script>
-        var nav = document.querySelector("nav");
-
-        function toggleNav() {
-            nav.classList.toggle("hide");
-        }
-
-        document.addEventListener('click', function(event) {
-            toggleNav();
-        });
-
-        /*
-        var objects = document.querySelectorAll("object");
-
-        objects.forEach(function(el) {
-            //console.log(el);
-            el.addEventListener('click', function(event) {
-                toggleNav()
-            }, false)
-        });
-*/
-
-        /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
-        var prevScrollpos = window.pageYOffset;
-        window.onscroll = function() {
-            var currentScrollPos = window.pageYOffset;
-            if (prevScrollpos > currentScrollPos) {
-                toggleNav()
-            } else {
-                toggleNav()
-            }
-            prevScrollpos = currentScrollPos;
-        }
-    </script>
-
-    <script>
-        var socket = io();
-        var activeObject = document.querySelector(".staves .active");
-        var inactiveObject = document.querySelector(".staves .inactive");
-        var bpmDisplay = document.querySelector(".metronome .bpm");
-        var metronomeBox = document.querySelector(".metronome");
-        var activeObjectSvgRoute;
-        var inactiveObjectSvgRoute;
-
-
         let data = '<%- data%>';
         let route = '<%- route%>';
-        let staves = JSON.parse(data);
-
-        function initStaff(staves) {
-            if (staves.length > 0) {
-                const index = staves.length - 1
-                activeObjectSvgRoute = `../svg/${staves[index].route}/${staves[index].svg}.cropped.svg`
-                activeObject.data = activeObjectSvgRoute
-                activeObject.classList.remove('hidden')
-                if (staves.length > 1) {
-                    const index = staves.length - 2;
-                    inactiveObjectSvgRoute = `../svg/${staves[index].route}/${staves[index].svg}.cropped.svg`
-                    inactiveObject.data = inactiveObjectSvgRoute
-                    inactiveObject.classList.remove('hidden')
-                }
-            } else {
-                activeObject.innerHTML = "Esperando partitura...";
-                inactiveObject.innerHTML = "Esperando partitura...";
-
-            }
-        }
-        initStaff(staves);
-
-        function update(data) {
-            activeObject.innerHTML = ""
-            let oldObjectSvgRoute = activeObjectSvgRoute
-
-            if (oldObjectSvgRoute) {
-                inactiveObject.classList.remove('hidden')
-                inactiveObject.data = oldObjectSvgRoute
-            }
-
-            activeObject.classList.remove('hidden')
-            activeObjectSvgRoute = `../svg/${data.route}/${data.svg}.cropped.svg`
-            activeObject.data = activeObjectSvgRoute
-
-
-            console.log(oldObjectSvgRoute);
-            console.log(inactiveObject);
-            console.log(activeObject);
-        };
-
-        socket.on('beat', function(data) {
-            metronomeBox.classList.add('blink');
-            setTimeout(function() {
-                metronomeBox.classList.remove('blink')
-            }, 30);
-        });
-
-        socket.on('bpm', function(data) {
-            bpmDisplay.innerHTML = data.bpm;
-        });
-
-        socket.on('update', function(data) {
-            if (data.route == route) {
-                update(data)
-            }
-        })
     </script>
+    <script src="../scripts/fullscreen.js"></script>
+    <script src="../scripts/animations.js"></script>
+    <script src="../scripts/ws.js"></script>
 </body>
 
 </html>
