@@ -18,6 +18,7 @@ module.exports = function(io) {
                 lastBeat = beat;
             }
             //BPM
+            bpm = Math.round((bpm + Number.EPSILON) * 100) / 100;
             if (bpm != lastBpm) {
                 io.emit('bpm', {
                     bpm

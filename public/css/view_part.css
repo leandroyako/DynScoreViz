@@ -6,6 +6,20 @@
 
 .metronome {
     float: right;
+    background-color: inherit;
+    animation: blinker 1s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/*
+.blink {
+    transition: background-color 0.01s;
+}
+*/
+@keyframes blinker {
+    50% {
+        /* opacity: 0;*/
+        background-color: #333;
+    }
 }
 
 .grid {
@@ -14,6 +28,7 @@
     grid-template-rows: 48vh 48vh;
     height: 100vh;
     place-items: center;
+    overflow-y: hidden;
 }
 
 .grid object {
@@ -22,22 +37,9 @@
     pointer-events: none;
 }
 
-/*
-.one {
-    grid-row: 1;
+.grid object img {
+    height: inherit;
 }
-
-.two {
-    grid-row: 2;
-}
-*/
-
-/*
-.grid object {
-    display: block;
-    object-fit: cover;
-}
-*/
 
 .active {
     border: 1px solid #b6bdc3;
@@ -56,6 +58,8 @@
     opacity: 0;
     transition: visibility 0s 0.5s, opacity 2s linear;
 }
+
+
 
 .slide-top {
     -webkit-animation: slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -137,10 +141,4 @@
         -webkit-transform: translateY(100%);
         transform: translateY(100%);
     }
-}
-
-
-.blink {
-    background: #333;
-    /* transition: background 0.01s linear; */
 }
