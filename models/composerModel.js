@@ -104,7 +104,7 @@ class editorModel {
         this.onStaffListChanged(this.staves);
     }
 
-    // Flip the complete boolean on the specified staff
+    // Flip the 'complete' boolean on the specified staff
     toggleStaff(instrument, id) {
         this._pickInstrument(instrument);
         this.staves = this.staves.map(staff =>

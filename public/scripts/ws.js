@@ -28,7 +28,8 @@ var secondLastSvg;
 var thirdLastSvg;
 
 let staves = JSON.parse(data);
-//let initStavesLength;
+
+const state = ["afterNext", "next", "current", "gone"]
 
 function initStaff(staves) {
     const last = staves.length - 1
@@ -93,50 +94,84 @@ socket.on('update', function(data) {
 });
 
 function update(data) {
-    switch (initStavesLength) {
+    console.log(data)
+    const last = staves.length - 1
+    const secondLast = staves.length - 2
+    const thirdLast = staves.length - 3
+
+    switch (staves.length) {
         case 0:
+            staffOne.innerHTML = "Esperando partitura..."
+            staffTwo.className = ''
+            staffTwo.classList.add('gone')
+            staffThree.className = ''
+            staffThree.classList.add('gone')
             break
         case 1:
+            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
+            staffOne.data = lastSvg
             staffOne.classList.add('next')
-            staffTwo.classList.add('afterNext')
-            staffTwo.classList.add('hidden')
+            staffTwo.classList.add('hidden', 'afterNext')
+            staffThree.classList.add('hidden', 'gone')
             break
         case 2:
-            staffOne.classList.remove('hidden')
+            secondLastSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
+            staffOne.data = secondLastSvg
+            staffOne.className = ''
             staffOne.classList.add('current')
 
-            twoSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
-            staffTwo.data = twoSvg
-            next.classList.remove('hidden')
+            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
+            staffTwo.data = lastSvg
+            staffTwo.className = ''
             staffTwo.classList.add('next')
 
-            initStavesLength = 2
+            staffThree.className = ''
+            staffThree.classList.add('gone')
             break
         default:
-            oneSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
-            staffOne.data = oneSvg
-            //staffOne.classList.remove('hidden')
+            thirdLastSvg = `../svg/${staves[thirdLast].route}/${staves[thirdLast].svg}.cropped.svg`
+            staffOne.data = thirdLastSvg
+            staffOne.className = ''
             staffOne.classList.add('current')
 
-            twoSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
-            staffTwo.data = twoSvg
-            //staffTwo.classList.remove('hidden')
+            secondLastSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
+            staffTwo.data = secondLastSvg
+            staffTwo.className = ''
             staffTwo.classList.add('next')
 
-            threeSvg = `../svg/${staves[thirdLast].route}/${staves[thirdLast].svg}.cropped.svg`
-            staffThree.data = threeSvg
-            staffThree.classList.add('hidden')
-            staffThree.classList.add('afterNext')
+            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
+            staffThree.data = lastSvg
+            staffThree.className = ''
+            staffThree.classList.add('hidden', 'afterNext')
 
-            initStavesLength = 3
             break
     }
-};
+}
+
+const stepForward = staff => {
+    let staffClassList = Array.from(staff.classList)
+    let staffState = staffClassList.filter(
+        item => state.includes(item)
+    ).toString()
+    let index = state.indexOf(staffState)
+    //console.log(staffClassList)
+    console.log(staffState)
+    //console.log(index)
+    //console.log(staff.classList)
+    let nextIndex = (index + 1) % state.length
+    console.log(nextIndex)
+
+    let nextState = state[nextIndex]
+    console.log(nextState)
+
+    staff.classList.replace(staffState, nextState)
+}
 
 socket.on('scroll', function(data) {
+    //console.log(`scroll socket func: ${JSON.stringify(data)}`)
     if (data.route == route) {
-        /*
-        scroll staves one step forward
-        */
+        stepForward(staffOne)
+        stepForward(staffTwo)
+        stepForward(staffThree)
     }
 });

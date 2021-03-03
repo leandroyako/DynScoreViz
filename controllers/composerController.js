@@ -14,7 +14,7 @@ const index = (req, res) => {
 const view_part = (req, res) => {
     const parts = JSON.parse(localStorage.parts);
     const route = req.params.route;
-    localStorage.setItem("currentInstrument", JSON.stringify(route));
+    localStorage.setItem("currentInstrument", JSON.stringify(route)); //this belongs to client side
     const index = parts.findIndex(instrument => instrument.route == route);
     const staves = localStorage.getItem(parts[index].route);
     //console.log(staves);
@@ -52,6 +52,17 @@ const add_part_svg = (req, res) => {
     res.redirect(`../interpreter/${route}`);
 }
 
+const scroll_part = (req, res) => {
+    const instrument = req.params.instrument;
+    const route = instrument.replace(/ /g, '').toLowerCase();
+    //editor.scrollStaff(route);
+    io.emit('scroll', {
+        route
+    })
+    console.log(`scroll emited to: ${route}`);
+    res.redirect(`../../interpreter/${route}`);
+}
+
 const delete_part = (req, res) => {
     const route = req.params.route;
     const stored = localStorage.getItem('parts');
@@ -67,5 +78,6 @@ module.exports = {
     view_part,
     add_part,
     add_part_svg,
+    scroll_part,
     delete_part
 }
