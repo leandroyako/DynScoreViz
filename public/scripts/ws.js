@@ -6,33 +6,29 @@ var metronomeBox = document.querySelector(".metronome");
 
 socket.on('bpm', function(data) {
     bpmDisplay.innerHTML = data.bpm;
-    metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0.16, 1, 0.3, 1) infinite`;
-    console.log(data);
-});
-
-socket.on('beat', function(data) {
-    /*
-    metronomeBox.classList.add('blink');
-    setTimeout(function() {
-        metronomeBox.classList.remove('blink')
-    }, 30)
-    */
+    metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1) infinite`;
     //console.log(data);
-
 });
+
+/*
+socket.on('beat', function(data) {
+    console.log(data);
+    sync animation start time here??
+});
+*/
 
 
 /*** Scores ***/
-var staffOne = document.querySelector(".staves .one");
-var staffTwo = document.querySelector(".staves .two");
-var staffThree = document.querySelector(".staves .three");
+var staffOne = document.querySelector(".grid #one");
+var staffTwo = document.querySelector(".grid #two");
+var staffThree = document.querySelector(".grid #three");
 
-var oneSvg;
-var twoSvg;
-var threeSvg;
+var lastSvg;
+var secondLastSvg;
+var thirdLastSvg;
 
 let staves = JSON.parse(data);
-let initStavesLength;
+//let initStavesLength;
 
 function initStaff(staves) {
     const last = staves.length - 1
@@ -42,47 +38,48 @@ function initStaff(staves) {
     switch (staves.length) {
         case 0:
             staffOne.innerHTML = "Esperando partitura..."
-            staffTwo.innerHTML = "Esperando partitura..."
-            initStavesLength = 0
+            staffTwo.className = ''
+            staffTwo.classList.add('gone')
+            staffThree.className = ''
+            staffThree.classList.add('gone')
             break
         case 1:
-            oneSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
-            staffOne.data = oneSvg
+            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
+            staffOne.data = lastSvg
             staffOne.classList.add('next')
-            staffTwo.classList.add('afterNext')
-            staffTwo.classList.add('hidden')
-            initStavesLength = 1
+            staffTwo.classList.add('hidden', 'afterNext')
+            staffThree.classList.add('hidden', 'gone')
             break
         case 2:
-            oneSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
-            staffOne.data = oneSvg
-            staffOne.classList.remove('hidden')
+            secondLastSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
+            staffOne.data = secondLastSvg
+            staffOne.className = ''
             staffOne.classList.add('current')
 
-            twoSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
-            staffTwo.data = twoSvg
-            next.classList.remove('hidden')
+            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
+            staffTwo.data = lastSvg
+            staffTwo.className = ''
             staffTwo.classList.add('next')
 
-            initStavesLength = 2
+            staffThree.className = ''
+            staffThree.classList.add('gone')
             break
         default:
-            oneSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
-            staffOne.data = oneSvg
-            //staffOne.classList.remove('hidden')
+            thirdLastSvg = `../svg/${staves[thirdLast].route}/${staves[thirdLast].svg}.cropped.svg`
+            staffOne.data = thirdLastSvg
+            staffOne.className = ''
             staffOne.classList.add('current')
 
-            twoSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
-            staffTwo.data = twoSvg
-            //staffTwo.classList.remove('hidden')
+            secondLastSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
+            staffTwo.data = secondLastSvg
+            staffTwo.className = ''
             staffTwo.classList.add('next')
 
-            threeSvg = `../svg/${staves[thirdLast].route}/${staves[thirdLast].svg}.cropped.svg`
-            staffThree.data = threeSvg
-            staffThree.classList.add('hidden')
-            staffThree.classList.add('afterNext')
+            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
+            staffThree.data = lastSvg
+            staffThree.className = ''
+            staffThree.classList.add('hidden', 'afterNext')
 
-            initStavesLength = 3
             break
     }
 }
@@ -135,3 +132,11 @@ function update(data) {
             break
     }
 };
+
+socket.on('scroll', function(data) {
+    if (data.route == route) {
+        /*
+        scroll staves one step forward
+        */
+    }
+});

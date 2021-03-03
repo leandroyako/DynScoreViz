@@ -30,7 +30,7 @@ nav {
     top: 0px;
     width: 100%;
     transition: top 0.3s;
-    /* Transition effect when sliding down (and up) */
+    z-index: 100;
 }
 
 nav.hide {
