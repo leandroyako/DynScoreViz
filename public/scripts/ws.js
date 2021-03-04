@@ -29,7 +29,7 @@ var thirdLastSvg;
 
 let staves = JSON.parse(data);
 
-const state = ["afterNext", "next", "current", "gone"]
+const state = ["next", "current", "gone"]
 
 function initStaff(staves) {
     const last = staves.length - 1
@@ -48,8 +48,8 @@ function initStaff(staves) {
             lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
             staffOne.data = lastSvg
             staffOne.classList.add('next')
-            staffTwo.classList.add('hidden', 'afterNext')
-            staffThree.classList.add('hidden', 'gone')
+            staffTwo.classList.add('hidden', 'gone')
+            staffThree.classList.add('hidden', 'current')
             break
         case 2:
             secondLastSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
@@ -79,7 +79,7 @@ function initStaff(staves) {
             lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
             staffThree.data = lastSvg
             staffThree.className = ''
-            staffThree.classList.add('hidden', 'afterNext')
+            staffThree.classList.add('hidden', 'gone')
 
             break
     }
@@ -111,8 +111,8 @@ function update(data) {
             lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
             staffOne.data = lastSvg
             staffOne.classList.add('next')
-            staffTwo.classList.add('hidden', 'afterNext')
-            staffThree.classList.add('hidden', 'gone')
+            staffTwo.classList.add('hidden', 'gone')
+            staffThree.classList.add('hidden', 'current')
             break
         case 2:
             secondLastSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
@@ -142,7 +142,7 @@ function update(data) {
             lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
             staffThree.data = lastSvg
             staffThree.className = ''
-            staffThree.classList.add('hidden', 'afterNext')
+            staffThree.classList.add('hidden', 'gone')
 
             break
     }

@@ -51,6 +51,7 @@
 
 .grid .current {
     top: 0vh;
+    opacity: 100%;
 }
 
 .grid .next {
@@ -58,14 +59,32 @@
     opacity: 65%;
 }
 
+
 .grid .afterNext {
+    /* deprecated? */
     top: 100vh;
 }
 
 .grid .gone {
-    top: -50vh;
+    top: 100vh;
+    animation: gone 1s
 }
 
+@keyframes gone {
+    0% {
+        top: 0vh
+    }
+
+    99% {
+        top: -50vh;
+        opacity: 0
+    }
+
+    100% {
+        top: 100vh;
+        opacity: 0;
+    }
+}
 
 /* Fade-Out Effect */
 .hidden {
