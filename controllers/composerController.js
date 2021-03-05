@@ -14,10 +14,9 @@ const index = (req, res) => {
 const view_part = (req, res) => {
     const parts = JSON.parse(localStorage.parts);
     const route = req.params.route;
-    localStorage.setItem("currentInstrument", JSON.stringify(route)); //this belongs to client side
+    //localStorage.setItem("currentInstrument", JSON.stringify(route)); //this belongs to client side
     const index = parts.findIndex(instrument => instrument.route == route);
     const staves = localStorage.getItem(parts[index].route);
-    //console.log(staves);
     res.render('view_part', {
         data: staves,
         route: route
@@ -25,41 +24,48 @@ const view_part = (req, res) => {
 }
 
 const add_part = (req, res) => {
-    const instrument = req.params.instrument;
-    const route = instrument.replace(/ /g, '').toLowerCase(); //move upper tree
+    const instrument = req.params.instrument
+    const route = instrument.replace(/ /g, '').toLowerCase() //move upper tree
     const part = {
         instrument,
         route
-    };
-    editor.addPart(part);
-    res.redirect('/'); //wrong path?
+    }
+    editor.addPart(part)
+    res.redirect('/') //is this path correct?
 }
 
 const add_part_svg = (req, res) => {
-    const instrument = req.params.instrument;
-    const svg = req.params.svg_path;
-    const route = instrument.replace(/ /g, '').toLowerCase();
+    const parts = JSON.parse(localStorage.parts)
+    const instrument = req.params.instrument
+    const svg = req.params.svg_path
+    const route = instrument.replace(/ /g, '').toLowerCase()
     const staff = {
         instrument,
         route,
         svg
-    };
+    }
     editor.addStaff(staff);
     io.emit('update', {
         route,
         svg
     })
-    res.redirect(`../interpreter/${route}`);
+    /////// HOW TO SEND LAST DATA TO INTERPRETER VIEW???
+    const index = parts.findIndex(instrument => instrument.route == route)
+    const staves = localStorage.getItem(parts[index].route)
+    console.log(staves)
+    res.render('view_part', {
+        data: staves,
+        route: route
+    })
+    //res.redirect(`../interpreter/${route}`);
 }
 
 const scroll_part = (req, res) => {
     const instrument = req.params.instrument;
     const route = instrument.replace(/ /g, '').toLowerCase();
-    //editor.scrollStaff(route);
     io.emit('scroll', {
         route
     })
-    console.log(`scroll emited to: ${route}`);
     res.redirect(`../../interpreter/${route}`);
 }
 

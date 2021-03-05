@@ -30,7 +30,7 @@ nav {
     top: 0px;
     width: 100%;
     transition: top 0.3s;
-    z-index: 100;
+    z-index: 999;
 }
 
 nav.hide {

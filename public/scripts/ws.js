@@ -1,8 +1,8 @@
 var socket = io();
 
 /*** Metronome ***/
-var bpmDisplay = document.querySelector(".metronome .bpm");
-var metronomeBox = document.querySelector(".metronome");
+const bpmDisplay = document.querySelector(".metronome .bpm");
+const metronomeBox = document.querySelector(".metronome");
 
 socket.on('bpm', function(data) {
     bpmDisplay.innerHTML = data.bpm;
@@ -19,73 +19,87 @@ socket.on('beat', function(data) {
 
 
 /*** Scores ***/
-var staffOne = document.querySelector(".grid #one");
-var staffTwo = document.querySelector(".grid #two");
-var staffThree = document.querySelector(".grid #three");
+const staffOne = document.querySelector(".grid #one");
+const staffTwo = document.querySelector(".grid #two");
+const staffThree = document.querySelector(".grid #three");
 
-var lastSvg;
-var secondLastSvg;
-var thirdLastSvg;
+let staves = () => {
+    console.log(getData()) //this is init data that never changes! need to find a way to access latest server side localStorage or resend request from server on 'update' msgs
+    return JSON.parse(getData()); //'data' defined inside 'view_part.ejs' <script>
+};
 
-let staves = JSON.parse(data);
 
-const state = ["next", "current", "gone"]
+let lastStaves = (staves) => {
+    const last = staves[staves.length - 1]
+    const secondLast = staves[staves.length - 2]
+    const thirdLast = staves[staves.length - 3]
+    console.log({
+        thirdLast,
+        secondLast,
+        last
+    })
+    return {
+        thirdLast,
+        secondLast,
+        last
+    }
+}
+
+const svgRoute = (staff) => `../svg/${staff.route}/${staff.svg}.cropped.svg`
+
+const gone = (staff) => {
+    staff.className = ''
+    staff.classList.add('gone')
+}
+const current = (staff) => {
+    staff.className = ''
+    staff.classList.add('current')
+}
+const next = (staff) => {
+    staff.className = ''
+    staff.classList.add('next')
+}
 
 function initStaff(staves) {
-    const last = staves.length - 1
-    const secondLast = staves.length - 2
-    const thirdLast = staves.length - 3
+
+    const last = lastStaves(staves).last
+    const secondLast = lastStaves(staves).secondLast
+    const thirdLast = lastStaves(staves).thirdLast
 
     switch (staves.length) {
         case 0:
             staffOne.innerHTML = "Esperando partitura..."
-            staffTwo.className = ''
-            staffTwo.classList.add('gone')
-            staffThree.className = ''
-            staffThree.classList.add('gone')
+            gone(staffTwo)
+            gone(staffThree)
             break
         case 1:
-            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
-            staffOne.data = lastSvg
-            staffOne.classList.add('next')
-            staffTwo.classList.add('hidden', 'gone')
-            staffThree.classList.add('hidden', 'current')
+            staffOne.data = svgRoute(last)
+            next(staffOne)
+            gone(staffTwo)
+            current(staffThree)
+            staffTwo.classList.add('hidden')
+            staffThree.classList.add('hidden')
             break
         case 2:
-            secondLastSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
-            staffOne.data = secondLastSvg
-            staffOne.className = ''
-            staffOne.classList.add('current')
-
-            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
-            staffTwo.data = lastSvg
-            staffTwo.className = ''
-            staffTwo.classList.add('next')
-
-            staffThree.className = ''
-            staffThree.classList.add('gone')
+            staffOne.data = svgRoute(secondLast)
+            current(staffOne)
+            staffTwo.data = svgRoute(last)
+            next(staffTwo)
+            gone(staffThree)
             break
         default:
-            thirdLastSvg = `../svg/${staves[thirdLast].route}/${staves[thirdLast].svg}.cropped.svg`
-            staffOne.data = thirdLastSvg
-            staffOne.className = ''
-            staffOne.classList.add('current')
-
-            secondLastSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
-            staffTwo.data = secondLastSvg
-            staffTwo.className = ''
-            staffTwo.classList.add('next')
-
-            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
-            staffThree.data = lastSvg
-            staffThree.className = ''
-            staffThree.classList.add('hidden', 'gone')
-
+            staffOne.data = svgRoute(thirdLast)
+            current(staffOne)
+            staffTwo.data = svgRoute(secondLast)
+            next(staffTwo)
+            staffThree.data = svgRoute(last)
+            gone(staffThree)
+            staffThree.classList.add('hidden')
             break
     }
 }
 
-initStaff(staves);
+initStaff(staves());
 
 socket.on('update', function(data) {
     if (data.route == route) {
@@ -95,58 +109,12 @@ socket.on('update', function(data) {
 
 function update(data) {
     console.log(data)
-    const last = staves.length - 1
-    const secondLast = staves.length - 2
-    const thirdLast = staves.length - 3
+    initStaff(staves())
+    scrollAll()
 
-    switch (staves.length) {
-        case 0:
-            staffOne.innerHTML = "Esperando partitura..."
-            staffTwo.className = ''
-            staffTwo.classList.add('gone')
-            staffThree.className = ''
-            staffThree.classList.add('gone')
-            break
-        case 1:
-            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
-            staffOne.data = lastSvg
-            staffOne.classList.add('next')
-            staffTwo.classList.add('hidden', 'gone')
-            staffThree.classList.add('hidden', 'current')
-            break
-        case 2:
-            secondLastSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
-            staffOne.data = secondLastSvg
-            staffOne.className = ''
-            staffOne.classList.add('current')
-
-            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
-            staffTwo.data = lastSvg
-            staffTwo.className = ''
-            staffTwo.classList.add('next')
-
-            staffThree.className = ''
-            staffThree.classList.add('gone')
-            break
-        default:
-            thirdLastSvg = `../svg/${staves[thirdLast].route}/${staves[thirdLast].svg}.cropped.svg`
-            staffOne.data = thirdLastSvg
-            staffOne.className = ''
-            staffOne.classList.add('current')
-
-            secondLastSvg = `../svg/${staves[secondLast].route}/${staves[secondLast].svg}.cropped.svg`
-            staffTwo.data = secondLastSvg
-            staffTwo.className = ''
-            staffTwo.classList.add('next')
-
-            lastSvg = `../svg/${staves[last].route}/${staves[last].svg}.cropped.svg`
-            staffThree.data = lastSvg
-            staffThree.className = ''
-            staffThree.classList.add('hidden', 'gone')
-
-            break
-    }
 }
+
+const state = ["next", "current", "gone"]
 
 const stepForward = staff => {
     let staffClassList = Array.from(staff.classList)
@@ -154,24 +122,20 @@ const stepForward = staff => {
         item => state.includes(item)
     ).toString()
     let index = state.indexOf(staffState)
-    //console.log(staffClassList)
-    console.log(staffState)
-    //console.log(index)
-    //console.log(staff.classList)
     let nextIndex = (index + 1) % state.length
-    console.log(nextIndex)
-
     let nextState = state[nextIndex]
-    console.log(nextState)
-
     staff.classList.replace(staffState, nextState)
+}
+
+const scrollAll = () => {
+    stepForward(staffOne)
+    stepForward(staffTwo)
+    stepForward(staffThree)
 }
 
 socket.on('scroll', function(data) {
     //console.log(`scroll socket func: ${JSON.stringify(data)}`)
     if (data.route == route) {
-        stepForward(staffOne)
-        stepForward(staffTwo)
-        stepForward(staffThree)
+        scrollAll()
     }
 });

@@ -22,7 +22,8 @@
     </div>
 
     <script>
-        let data = '<%- data%>';
+        const getData = () => '<%- data%>';
+        let data = getData();
         let route = '<%- route%>';
     </script>
     <script src="../socket.io.js"></script>
