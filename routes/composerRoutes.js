@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const composerController = require('../controllers/composerController')
+const interpreterController = require('../controllers/interpreterController')
 
 router.get('/', composerController.index)
 router.get('/:route', composerController.view_part)

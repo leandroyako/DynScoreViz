@@ -12,11 +12,11 @@ const index = (req, res) => {
 }
 
 const view_part = (req, res) => {
-    const parts = JSON.parse(serverLocalStorage.parts);
-    const route = req.params.route;
-    //serverLocalStorage.setItem("currentInstrument", JSON.stringify(route)); //this belongs to client side
-    const index = parts.findIndex(instrument => instrument.route == route);
-    const staves = serverLocalStorage.getItem(parts[index].route);
+    const parts = JSON.parse(serverLocalStorage.parts)
+    const instrument = req.params.instrument
+    const route = req.params.route || instrument.replace(/ /g, '').toLowerCase()
+    const index = parts.findIndex(instrument => instrument.route == route)
+    const staves = serverLocalStorage.getItem(parts[index].route)
     res.render('view_part', {
         data: staves,
         route: route
@@ -44,24 +44,16 @@ const add_part_svg = (req, res, next) => {
         route,
         svg
     }
+
     editor.addStaff(staff);
-    io.emit('update', {
-        route,
-        svg
-    })
-    /////// HOW TO SEND LAST DATA TO INTERPRETER VIEW???
+
     const index = parts.findIndex(instrument => instrument.route == route)
     const staves = serverLocalStorage.getItem(parts[index].route)
-    console.log("sending new staves from composerController")
-    console.log(route)
-    console.log(staves)
-    /*
-    res.render('view_part', {
-        data: staves,
-        route: route
+
+    io.emit('update', {
+        route,
+        staves
     })
-    */
-    next()
 }
 
 const scroll_part = (req, res) => {

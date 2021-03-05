@@ -7,7 +7,6 @@ const metronomeBox = document.querySelector(".metronome");
 socket.on('bpm', function(data) {
     bpmDisplay.innerHTML = data.bpm;
     metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1) infinite`;
-    //console.log(data);
 });
 
 /*
@@ -22,10 +21,8 @@ const staffOne = document.querySelector(".grid #one");
 const staffTwo = document.querySelector(".grid #two");
 const staffThree = document.querySelector(".grid #three");
 
-let staves = () => {
-    console.log('staves() at ws.js')
-    console.log(data) //this is init data that never changes! need to find a way to access latest server side localStorage or resend request from server on 'update' msgs
-    return JSON.parse(data); //'data' defined inside 'view_part.ejs' <script>
+let staves = (staves) => {
+    return JSON.parse(staves);
 };
 
 let lastStaves = (staves) => {
@@ -61,7 +58,6 @@ const next = (staff) => {
 }
 
 function initStaff(staves) {
-
     const last = lastStaves(staves).last
     const secondLast = lastStaves(staves).secondLast
     const thirdLast = lastStaves(staves).thirdLast
@@ -99,7 +95,7 @@ function initStaff(staves) {
     }
 }
 
-initStaff(staves());
+initStaff(staves(data)); //uses 'data' from request res.render('view_part')
 
 socket.on('update', function(data) {
     if (data.route == route) {
@@ -107,12 +103,9 @@ socket.on('update', function(data) {
     }
 });
 
-function update(data) {
-    console.log('update(data) at ws.js')
-    console.log(data)
-    initStaff(staves()) //this is still using old same data when page loads first time
+function update(data) { //uses data from socket.on('update)
+    initStaff(staves(data.staves))
     scrollAll()
-
 }
 
 const state = ["next", "current", "gone"]
@@ -135,7 +128,6 @@ const scrollAll = () => {
 }
 
 socket.on('scroll', function(data) {
-    //console.log(`scroll socket func: ${JSON.stringify(data)}`)
     if (data.route == route) {
         scrollAll()
     }
