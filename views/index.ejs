@@ -7,7 +7,7 @@
     <div class="blogs content">
         <% if (data.length > 0) { %>
         <% data.forEach(part => { %>
-        <a class="single" href="/interpreter/<%= part.route %>">
+        <a class="single" href="/interpreter/<%= part.route %>" onclick="storeCurrentInstrument('<%= part.route %>')">
             <h3 class="title"><%= part.instrument %></h3>
             <p class="snippet"><%= part.route %></p>
         </a>
@@ -20,5 +20,8 @@
 
     <!-- <%- include("./partials/footer.ejs") %> -->
 </body>
+<script>
+    const storeCurrentInstrument = (route) => localStorage.setItem("currentInstrument", JSON.stringify(route))
+</script>
 
 </html>

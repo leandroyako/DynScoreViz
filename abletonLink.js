@@ -24,7 +24,7 @@ module.exports = function(io) {
                     bpm
                 });
                 lastBpm = bpm;
-                //    console.log(bpm);
+                //console.log(bpm);
             }
         });
     };

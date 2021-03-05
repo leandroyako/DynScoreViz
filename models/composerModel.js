@@ -68,7 +68,7 @@ class editorModel {
     addStaff(newStaff) {
         this._pickInstrument(newStaff.instrument);
         const currentId = this.staves.length > 0 ? this.staves[this.staves.length - 1].id + 1 : 0
-        //        console.log(currentId)
+        //console.log(currentId)
         const staff = {
             id: currentId,
             svg: newStaff.svg,

@@ -17,22 +17,22 @@ socket.on('beat', function(data) {
 });
 */
 
-
 /*** Scores ***/
 const staffOne = document.querySelector(".grid #one");
 const staffTwo = document.querySelector(".grid #two");
 const staffThree = document.querySelector(".grid #three");
 
 let staves = () => {
-    console.log(getData()) //this is init data that never changes! need to find a way to access latest server side localStorage or resend request from server on 'update' msgs
-    return JSON.parse(getData()); //'data' defined inside 'view_part.ejs' <script>
+    console.log('staves() at ws.js')
+    console.log(data) //this is init data that never changes! need to find a way to access latest server side localStorage or resend request from server on 'update' msgs
+    return JSON.parse(data); //'data' defined inside 'view_part.ejs' <script>
 };
-
 
 let lastStaves = (staves) => {
     const last = staves[staves.length - 1]
     const secondLast = staves[staves.length - 2]
     const thirdLast = staves[staves.length - 3]
+    console.log('lastStaves at ws.js')
     console.log({
         thirdLast,
         secondLast,
@@ -108,8 +108,9 @@ socket.on('update', function(data) {
 });
 
 function update(data) {
+    console.log('update(data) at ws.js')
     console.log(data)
-    initStaff(staves())
+    initStaff(staves()) //this is still using old same data when page loads first time
     scrollAll()
 
 }

@@ -12,13 +12,12 @@ const server = require('./server')(app);
 const io = require('./io').init(server);
 
 io.on('connection', function(client) {
-    console.log('Connection success', client.id);
+    console.log('Connection succeeded', client.id)
     client.on('event', function(data) {
         console.log('Event data', data)
     });
     client.on('disconnect', function() {
-        'Connection disconnected',
-        client.id
+        console.log('Client disconnected', client.id)
     });
 });
 

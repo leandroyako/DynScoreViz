@@ -28,7 +28,7 @@ osc.on('open', () => {
 })
 
 osc.on('newStaff', message => {
-    console.log(message);
+    //console.log(message);
     http
         .request({
                 hostname: "localhost",
@@ -42,17 +42,12 @@ osc.on('newStaff', message => {
                     data += d
                 })
                 res.on("end", () => {
-                    console.log(data)
+                    data
                 })
             }
         )
         .end();
 })
-
-//console.log(message.args);
-//const route = message.args[0];
-//const file = message.args[1];
-//emitUpdate(`${route}/${file}`)
 
 osc.on('newPart', message => {
     http
@@ -68,7 +63,7 @@ osc.on('newPart', message => {
                     data += d
                 })
                 res.on("end", () => {
-                    console.log(data)
+                    data
                 })
             }
         )
@@ -89,7 +84,7 @@ osc.on('scroll', message => {
                     data += d
                 })
                 res.on("end", () => {
-                    console.log(data)
+                    data
                 })
             }
         )

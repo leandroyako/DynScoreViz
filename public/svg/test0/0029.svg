@@ -7,19 +7,19 @@ tspan { white-space: pre; }
 <!-- Page: 1/1 -->
 <g color="rgb(49.8039%, 49.8039%, 49.8039%)">
 <g transform="translate(16.0600, 10.3100)">
-<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="11.4377" y2="0"/>
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="12.7507" y2="0"/>
 </g>
 <g transform="translate(16.0600, 9.3100)">
-<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="11.4377" y2="0"/>
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="12.7507" y2="0"/>
 </g>
 <g transform="translate(16.0600, 8.3100)">
-<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="11.4377" y2="0"/>
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="12.7507" y2="0"/>
 </g>
 <g transform="translate(16.0600, 7.3100)">
-<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="11.4377" y2="0"/>
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="12.7507" y2="0"/>
 </g>
 <g transform="translate(16.0600, 6.3100)">
-<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="11.4377" y2="0"/>
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="12.7507" y2="0"/>
 </g>
 </g>
 <g transform="translate(16.0600, 5.3100)">
@@ -48,7 +48,7 @@ c79 97 144 199 144 324c0 53 -4 76 -20 124z" fill="currentColor"/>
 </g>
 <g transform="translate(24.6534, 12.9965)">
 <text font-family="serif" font-size="2.2000" text-anchor="start" fill="currentColor">
-<tspan>0</tspan>
+<tspan>111</tspan>
 </text>
 </g>
 <g transform="translate(24.6534, 5.3100)">

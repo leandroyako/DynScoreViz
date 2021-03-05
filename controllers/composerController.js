@@ -34,7 +34,7 @@ const add_part = (req, res) => {
     res.redirect('/') //is this path correct?
 }
 
-const add_part_svg = (req, res) => {
+const add_part_svg = (req, res, next) => {
     const parts = JSON.parse(localStorage.parts)
     const instrument = req.params.instrument
     const svg = req.params.svg_path
@@ -52,12 +52,16 @@ const add_part_svg = (req, res) => {
     /////// HOW TO SEND LAST DATA TO INTERPRETER VIEW???
     const index = parts.findIndex(instrument => instrument.route == route)
     const staves = localStorage.getItem(parts[index].route)
+    console.log("sending new staves from composerController")
+    console.log(route)
     console.log(staves)
+    /*
     res.render('view_part', {
         data: staves,
         route: route
     })
-    //res.redirect(`../interpreter/${route}`);
+    */
+    next()
 }
 
 const scroll_part = (req, res) => {
@@ -66,7 +70,6 @@ const scroll_part = (req, res) => {
     io.emit('scroll', {
         route
     })
-    res.redirect(`../../interpreter/${route}`);
 }
 
 const delete_part = (req, res) => {
@@ -75,7 +78,6 @@ const delete_part = (req, res) => {
     const allParts = JSON.parse(stored);
     const parts = allParts.filter(part => part.route !== route)
     localStorage.setItem('parts', JSON.stringify(parts));
-
     res.redirect('/');
 }
 
