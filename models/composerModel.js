@@ -1,34 +1,32 @@
 const fs = require('fs');
 
 class editorModel {
-    constructor() {
-
-    }
+    constructor() {}
 
     _pickInstrument(instrument) {
         this.instrument = instrument;
         this.route = instrument.replace(/ /g, '').toLowerCase();
-        const stored = localStorage.getItem(this.route);
+        const stored = serverLocalStorage.getItem(this.route);
         //console.log(stored);
         this.staves = JSON.parse(stored) || []
     }
 
     _createInstrument(instrument) {
-        localStorage.getItem(instrument) ||
-            localStorage.setItem(instrument, JSON.stringify([]))
+        serverLocalStorage.getItem(instrument) ||
+            serverLocalStorage.setItem(instrument, JSON.stringify([]))
     }
 
     _pickParts() {
-        localStorage.getItem('parts') ||
-            localStorage.setItem('parts', JSON.stringify([]));
+        serverLocalStorage.getItem('parts') ||
+            serverLocalStorage.setItem('parts', JSON.stringify([]));
 
-        this.parts = JSON.parse(localStorage.getItem('parts'))
+        this.parts = JSON.parse(serverLocalStorage.getItem('parts'))
     }
 
     _commit(changes) {
         //console.log(this.route);
         //console.log(changes);
-        localStorage.setItem(this.route, JSON.stringify(changes))
+        serverLocalStorage.setItem(this.route, JSON.stringify(changes))
     }
 
     _createDir(dir) { // create new directory
@@ -93,7 +91,6 @@ class editorModel {
             } :
             staff,
         )
-
         this._commit(this.staves);
     }
 
@@ -118,15 +115,12 @@ class editorModel {
             } :
             staff,
         );
-
         this._commit(this.staves);
     }
 
     bindStaffListChanged(callback) {
         this.onStaffListChanged = callback;
     }
-
-
 }
 
 module.exports = editorModel;

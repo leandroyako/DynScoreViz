@@ -3,8 +3,8 @@ const editor = new Editor();
 const io = require('../io').get();
 
 const index = (req, res) => {
-    localStorage.getItem('parts') || localStorage.setItem('parts', JSON.stringify([]))
-    const parts = JSON.parse(localStorage.getItem('parts'))
+    serverLocalStorage.getItem('parts') || serverLocalStorage.setItem('parts', JSON.stringify([]))
+    const parts = JSON.parse(serverLocalStorage.getItem('parts'))
     res.render('index', {
         data: parts,
         title: 'Elegir Instrumento'
@@ -12,11 +12,11 @@ const index = (req, res) => {
 }
 
 const view_part = (req, res) => {
-    const parts = JSON.parse(localStorage.parts);
+    const parts = JSON.parse(serverLocalStorage.parts);
     const route = req.params.route;
-    //localStorage.setItem("currentInstrument", JSON.stringify(route)); //this belongs to client side
+    //serverLocalStorage.setItem("currentInstrument", JSON.stringify(route)); //this belongs to client side
     const index = parts.findIndex(instrument => instrument.route == route);
-    const staves = localStorage.getItem(parts[index].route);
+    const staves = serverLocalStorage.getItem(parts[index].route);
     res.render('view_part', {
         data: staves,
         route: route
@@ -35,7 +35,7 @@ const add_part = (req, res) => {
 }
 
 const add_part_svg = (req, res, next) => {
-    const parts = JSON.parse(localStorage.parts)
+    const parts = JSON.parse(serverLocalStorage.parts)
     const instrument = req.params.instrument
     const svg = req.params.svg_path
     const route = instrument.replace(/ /g, '').toLowerCase()
@@ -51,7 +51,7 @@ const add_part_svg = (req, res, next) => {
     })
     /////// HOW TO SEND LAST DATA TO INTERPRETER VIEW???
     const index = parts.findIndex(instrument => instrument.route == route)
-    const staves = localStorage.getItem(parts[index].route)
+    const staves = serverLocalStorage.getItem(parts[index].route)
     console.log("sending new staves from composerController")
     console.log(route)
     console.log(staves)
@@ -74,10 +74,10 @@ const scroll_part = (req, res) => {
 
 const delete_part = (req, res) => {
     const route = req.params.route;
-    const stored = localStorage.getItem('parts');
+    const stored = serverLocalStorage.getItem('parts');
     const allParts = JSON.parse(stored);
     const parts = allParts.filter(part => part.route !== route)
-    localStorage.setItem('parts', JSON.stringify(parts));
+    serverLocalStorage.setItem('parts', JSON.stringify(parts));
     res.redirect('/');
 }
 

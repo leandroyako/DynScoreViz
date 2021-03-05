@@ -21,7 +21,7 @@
     <!-- <%- include("./partials/footer.ejs") %> -->
 </body>
 <script>
-    const storeCurrentInstrument = (route) => localStorage.setItem("currentInstrument", JSON.stringify(route))
+    const storeCurrentInstrument = (route) => localStorage.currentInstrument = route;
 </script>
 
 </html>

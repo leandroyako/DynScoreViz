@@ -1,5 +1,5 @@
 const LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('./localStorage');
+serverLocalStorage = new LocalStorage('./localStorage');
 
 const express = require('express');
 const morgan = require('morgan');

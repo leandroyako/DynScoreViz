@@ -2,8 +2,8 @@
 //const Interpreter = require('../models/interpreterModel'); //sin uso?
 
 const index = (req, res) => {
-    localStorage.getItem('parts') || localStorage.setItem('parts', JSON.stringify([]))
-    const parts = JSON.parse(localStorage.getItem('parts'))
+    serverLocalStorage.getItem('parts') || serverLocalStorage.setItem('parts', JSON.stringify([]))
+    const parts = JSON.parse(serverLocalStorage.getItem('parts'))
     res.render('index', {
         data: parts,
         title: 'Elegir Instrumento'
@@ -11,11 +11,11 @@ const index = (req, res) => {
 }
 
 const view_part = (req, res) => {
-    const parts = JSON.parse(localStorage.parts);
+    const parts = JSON.parse(serverLocalStorage.parts);
     const route = req.params.route;
-    localStorage.setItem("currentInstrument", JSON.stringify(route));
+    //serverLocalStorage.setItem("currentInstrument", JSON.stringify(route));
     const index = parts.findIndex(instrument => instrument.route == route);
-    const staves = localStorage.getItem(parts[index].route);
+    const staves = serverLocalStorage.getItem(parts[index].route);
     // console.log(staves[0]);
     // console.log(route);
     res.render('view_part', {
