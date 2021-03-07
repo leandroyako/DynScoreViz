@@ -1,4 +1,4 @@
-var socket = io();
+//const socket = io();
 
 /*** Metronome ***/
 const bpmDisplay = document.querySelector(".metronome .bpm");

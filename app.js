@@ -7,11 +7,11 @@ const morgan = require('morgan');
 // express app
 const app = express();
 // load server, websockets, link, osc server and call its constructor, passing the app, server and socket objects in order
-// that module constructor function will return each object 
+// that module constructor function will return each object
 const server = require('./server')(app);
 const io = require('./io').init(server);
 
-io.on('connection', function(client) {
+io.on('connection', (client) => {
     console.log('Connection succeeded', client.id)
     client.on('event', function(data) {
         console.log('Event data', data)
@@ -52,14 +52,11 @@ app.use('/interpreter', interpreterRoutes);
 // composer routes
 app.use('/composer', composerRoutes);
 
-
 // 404 page
 app.use((req, res) => {
     res.status(404).render('404', {
         title: '404'
     });
 });
-
-
 
 module.exports = app;
