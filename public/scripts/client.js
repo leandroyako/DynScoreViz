@@ -1,4 +1,4 @@
-//const socket = io();
+const socket = io();
 
 /*** Metronome ***/
 const bpmDisplay = document.querySelector(".metronome .bpm");
@@ -17,9 +17,9 @@ socket.on('beat', function(data) {
 */
 
 /*** Scores ***/
-const staffOne = document.querySelector(".grid #one");
-const staffTwo = document.querySelector(".grid #two");
-const staffThree = document.querySelector(".grid #three");
+const slotOne = document.querySelector(".grid #one");
+const slotTwo = document.querySelector(".grid #two");
+const slotThree = document.querySelector(".grid #three");
 
 let staves = (staves) => {
     return JSON.parse(staves);
@@ -42,93 +42,169 @@ let lastStaves = (staves) => {
     }
 }
 
-const svgRoute = (staff) => `../svg/${staff.route}/${staff.svg}.cropped.svg`
+const svgRoute = staff => `../svg/${staff.route}/${staff.svg}.cropped.svg`
 
-const gone = (staff) => {
-    staff.className = ''
-    staff.classList.add('gone')
-}
-const current = (staff) => {
-    staff.className = ''
-    staff.classList.add('current')
-}
-const next = (staff) => {
-    staff.className = ''
-    staff.classList.add('next')
+const completed = staff => {
+    const staffId = parseInt(staff.getAttribute('staffId'))
+    console.log(`Staff ${staffId} completed`)
+    //emit id to server and mark completed staff in instrument db
+    let currentData = staves(data)
+
+    pos = currentData.map(e => {
+        return e.id
+    }).indexOf(staffId);
+
+    //console.log("WTF", currentData[pos])
+
+    if (currentData[pos]) {
+        currentData[pos].complete = true
+        data = JSON.stringify(currentData)
+        socket.emit("staffCompleted", currentData[pos])
+    } else {
+        console.log(`Error: ${staffId} undefined. Cannot mark as completed`)
+    }
+
+    //console.log(currentData)
+
+    //console.log(staves(data))
+
 }
 
-function initStaff(staves) {
+const state = ["next", "current", "gone"]
+
+const changeState = (staff, newState) => {
+    const oldState = getOldState(staff.classList)
+    oldState ? staff.classList.replace(oldState, newState) : staff.classList.add(newState)
+    if (newState == "gone") {
+        completed(staff)
+    }
+}
+
+const gone = staff => {
+    changeState(staff, 'gone')
+}
+const current = staff => {
+    changeState(staff, 'current')
+}
+const next = staff => {
+    changeState(staff, 'next')
+}
+
+const getOldState = staffClassList => {
+    const classList = Array.from(staffClassList)
+    const oldState = classList.filter(
+        stateClass => state.includes(stateClass)
+    ).toString()
+    return oldState
+}
+
+const stepForward = staff => {
+    const oldState = getOldState(staff.classList)
+    let index = state.indexOf(oldState)
+    let nextIndex = (index + 1) % state.length
+    let nextState = state[nextIndex]
+    changeState(staff, nextState)
+}
+
+const filterCompleted = staves => {
+    return staves.filter(staff => !staff.complete)
+}
+
+const setStaffAttrib = (staff, obj) => {
+    staff.data = svgRoute(obj)
+    staff.setAttribute('staffId', obj.id)
+}
+
+const initStaff = allStaves => {
+    let staves = filterCompleted(allStaves)
     const last = lastStaves(staves).last
     const secondLast = lastStaves(staves).secondLast
     const thirdLast = lastStaves(staves).thirdLast
 
+    console.log("filtered staves: ", staves)
+
     switch (staves.length) {
         case 0:
-            staffOne.innerHTML = "Esperando partitura..."
-            gone(staffTwo)
-            gone(staffThree)
+            slotOne.innerHTML = "Esperando partitura..."
+            slotOne.classList.remove('hidden')
+            slotTwo.classList.add('hidden')
+            slotThree.classList.add('hidden')
+            gone(slotTwo)
+            gone(slotThree)
             break
         case 1:
-            staffOne.data = svgRoute(last)
-            next(staffOne)
-            gone(staffTwo)
-            current(staffThree)
-            staffTwo.classList.add('hidden')
-            staffThree.classList.add('hidden')
+            setStaffAttrib(slotOne, last)
+            next(slotOne)
+            gone(slotTwo)
+            current(slotThree)
+            slotOne.classList.remove('hidden')
+            slotTwo.classList.add('hidden')
+            slotThree.classList.add('hidden')
             break
         case 2:
-            staffOne.data = svgRoute(secondLast)
-            current(staffOne)
-            staffTwo.data = svgRoute(last)
-            next(staffTwo)
-            gone(staffThree)
+            setStaffAttrib(slotOne, secondLast)
+            current(slotOne)
+            setStaffAttrib(slotTwo, last)
+            next(slotTwo)
+            gone(slotThree)
+            slotOne.classList.remove('hidden')
+            slotTwo.classList.remove('hidden')
+            slotThree.classList.add('hidden')
             break
         default:
-            staffOne.data = svgRoute(thirdLast)
-            current(staffOne)
-            staffTwo.data = svgRoute(secondLast)
-            next(staffTwo)
-            staffThree.data = svgRoute(last)
-            gone(staffThree)
-            staffThree.classList.add('hidden')
+            setStaffAttrib(slotOne, thirdLast)
+            current(slotOne)
+            setStaffAttrib(slotTwo, secondLast)
+            next(slotTwo)
+            setStaffAttrib(slotThree, last)
+            gone(slotThree)
+            slotOne.classList.remove('hidden')
+            slotTwo.classList.remove('hidden')
+            slotThree.classList.add('hidden')
             break
     }
 }
 
 initStaff(staves(data)); //uses 'data' from request res.render('view_part')
 
-socket.on('update', function(data) {
+const updateStaff = allStaves => {
+    let staves = filterCompleted(allStaves)
+    const last = lastStaves(staves).last
+    const secondLast = lastStaves(staves).secondLast
+    const thirdLast = lastStaves(staves).thirdLast
+
+    console.log("filtered staves: ", staves)
+    scrollAll()
+    setStaffAttrib(slotOne, thirdLast)
+    current(slotOne)
+    setStaffAttrib(slotTwo, secondLast)
+    next(slotTwo)
+    setStaffAttrib(slotThree, last)
+    gone(slotThree)
+    slotOne.classList.remove('hidden')
+    slotTwo.classList.remove('hidden')
+    slotThree.classList.add('hidden')
+}
+
+socket.on('update', data => {
     if (data.route == route) {
         update(data)
     }
 });
 
-function update(data) { //uses data from socket.on('update)
-    initStaff(staves(data.staves))
+const update = data => { //uses data from socket.on('update)
+    updateStaff(staves(data.staves))
     scrollAll()
 }
 
-const state = ["next", "current", "gone"]
-
-const stepForward = staff => {
-    let staffClassList = Array.from(staff.classList)
-    let staffState = staffClassList.filter(
-        item => state.includes(item)
-    ).toString()
-    let index = state.indexOf(staffState)
-    let nextIndex = (index + 1) % state.length
-    let nextState = state[nextIndex]
-    staff.classList.replace(staffState, nextState)
-}
-
 const scrollAll = () => {
-    stepForward(staffOne)
-    stepForward(staffTwo)
-    stepForward(staffThree)
+    stepForward(slotOne)
+    stepForward(slotTwo)
+    stepForward(slotThree)
 }
 
-socket.on('scroll', function(data) {
-    if (data.route == route) {
+socket.on('scroll', data => {
+    if (data.route == route) { //replace with socket room  socket.join(route);
         scrollAll()
     }
 });

@@ -2,6 +2,13 @@ const Editor = require('../models/composerModel');
 const editor = new Editor();
 const io = require('../io').get();
 
+io.on('connection', (client) => {
+    client.on("staffCompleted", (staff) => {
+        console.log(staff)
+        editor.toggleStaff(staff.instrument, staff.id)
+    })
+});
+
 const index = (req, res) => {
     serverLocalStorage.getItem('parts') || serverLocalStorage.setItem('parts', JSON.stringify([]))
     const parts = JSON.parse(serverLocalStorage.getItem('parts'))
@@ -42,7 +49,7 @@ const add_part_svg = (req, res, next) => {
     const staff = {
         instrument,
         route,
-        svg
+        svg,
     }
 
     editor.addStaff(staff);
@@ -70,7 +77,15 @@ const delete_part = (req, res) => {
     const allParts = JSON.parse(stored);
     const parts = allParts.filter(part => part.route !== route)
     serverLocalStorage.setItem('parts', JSON.stringify(parts));
+    //delete part folder recursively
     res.redirect('/');
+}
+
+const toggle_staff = (req, res) => {
+    const instrument = req.params.instrument
+    const route = instrument.replace(/ /g, '').toLowerCase()
+    const id = req.params.id
+    editor.toggleStaff(instrument, id)
 }
 
 module.exports = {
@@ -79,5 +94,6 @@ module.exports = {
     add_part,
     add_part_svg,
     scroll_part,
-    delete_part
+    delete_part,
+    toggle_staff //unused... not sure where to put the request. should be accesible from outside?
 }

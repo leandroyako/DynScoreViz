@@ -13,13 +13,12 @@ const io = require('./io').init(server);
 
 io.on('connection', (client) => {
     console.log('Connection succeeded', client.id)
-    client.on('event', function(data) {
-        console.log('Event data', data)
-    });
+
     client.on('disconnect', function() {
         console.log('Client disconnected', client.id)
     });
 });
+
 
 const abletonLink = require('./abletonLink')(io);
 const osc = require('./osc');

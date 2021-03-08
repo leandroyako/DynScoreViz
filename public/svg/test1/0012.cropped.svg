@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" width="18.09mm" height="14.49mm" viewBox="0.0000 -0.0230 11.4377 9.1640">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" width="18.09mm" height="17.65mm" viewBox="0.0000 -0.0230 11.4386 11.1580">
 <style type="text/css">
 <![CDATA[
 tspan { white-space: pre; }
@@ -39,12 +39,14 @@ c71 -83 134 -244 134 -357c0 -143 -85 -255 -178 -364c21 -68 40 -137 57 -206zM462 
 c0 -43 25 -89 80 -121c5 -5 7 -11 7 -16c0 -12 -10 -23 -22 -23c-3 0 -6 1 -9 2c-81 43 -118 116 -118 186c0 89 58 175 161 198c-14 58 -29 116 -46 173c-106 -122 -212 -244 -212 -404zM406 1042c-99 -47 -162 -148 -162 -257c0 -73 20 -132 38 -191
 c79 97 144 199 144 324c0 53 -4 76 -20 124z" fill="currentColor"/>
 </g>
-<g transform="translate(9.2448, 6.2770)">
-<path transform="scale(0.0040, -0.0040)" d="M-50 0c0 28 22 50 50 50s50 -22 50 -50s-22 -50 -50 -50s-50 22 -50 50z" fill="currentColor"/>
-</g>
-<g transform="translate(8.5934, 9.1098)">
+<g transform="translate(8.5934, 11.1350)">
 <text font-family="serif" font-size="2.2000" text-anchor="start" fill="currentColor">
-<tspan>10</tspan>
+<tspan>2</tspan>
+</text>
+</g>
+<g transform="translate(8.5934, 8.5021)">
+<text font-family="serif" font-size="2.2000" text-anchor="start" fill="currentColor">
+<tspan>nil</tspan>
 </text>
 </g>
 <g transform="translate(8.5934, 4.7770)">

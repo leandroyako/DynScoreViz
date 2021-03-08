@@ -59,7 +59,7 @@ class editorModel {
             this._commit(this.parts);
             console.log(`New part added: ${newPart.instrument}`);
         } else {
-            console.log("Part already exists");
+            console.log(`${newPart.instrument} part already exists`);
         }
     }
 

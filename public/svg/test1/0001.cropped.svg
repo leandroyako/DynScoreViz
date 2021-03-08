@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" width="20.25mm" height="14.44mm" viewBox="0.0000 -0.0230 12.8044 9.1329">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" width="24.89mm" height="11.91mm" viewBox="0.0000 -0.0230 15.7397 7.5321">
 <style type="text/css">
 <![CDATA[
 tspan { white-space: pre; }
@@ -6,20 +6,33 @@ tspan { white-space: pre; }
 </style>
 <g color="rgb(49.8039%, 49.8039%, 49.8039%)">
 <g transform="translate(0.0000, 5.7770)">
-<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="12.7507" y2="0"/>
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="15.7397" y2="0"/>
 </g>
 <g transform="translate(0.0000, 4.7770)">
-<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="12.7507" y2="0"/>
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="15.7397" y2="0"/>
 </g>
 <g transform="translate(0.0000, 3.7770)">
-<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="12.7507" y2="0"/>
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="15.7397" y2="0"/>
 </g>
 <g transform="translate(0.0000, 2.7770)">
-<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="12.7507" y2="0"/>
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="15.7397" y2="0"/>
 </g>
 <g transform="translate(0.0000, 1.7770)">
-<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="12.7507" y2="0"/>
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1073" stroke="currentColor" x1="0.0537" y1="0" x2="15.7397" y2="0"/>
 </g>
+</g>
+<g transform="translate(14.6962, 2.3214)">
+<path transform="scale(0.0040, -0.0040)" d="M0 -213c0 -116 88 -204 149 -301c5 14 8 30 8 45c0 95 -89 189 -157 256zM0 0c0 -177 201 -292 201 -469c0 -33 -9 -65 -23 -95c18 -36 29 -75 29 -117c0 -63 -15 -126 -41 -183c-5 -8 -13 -12 -21 -12c-14 0 -27 11 -24 28c26 52 42 109 42 167c0 96 -93 189 -163 256
+v-75h-18v500h18z" fill="currentColor"/>
+</g>
+<g transform="translate(14.6264, 3.7770)">
+<rect x="-0.0697" y="-1.5000" width="0.1395" height="3.3206" ry="0.0444" fill="currentColor"/>
+</g>
+<g transform="translate(14.0448, 7.0091)">
+<path transform="scale(0.0040, -0.0040)" d="M-210 86c-9 2 -15 10 -15 19c0 12 12 23 25 19l405 -104c14 0 20 -6 20 -20s-6 -20 -20 -20l-405 -104c-13 -4 -25 7 -25 19c0 9 6 17 15 19l248 64l140 22l-140 22z" fill="currentColor"/>
+</g>
+<g transform="translate(13.3934, 5.7770)">
+<path transform="scale(0.0040, -0.0040)" d="M215 137c57 0 111 -29 111 -92c0 -71 -54 -120 -101 -148c-35 -21 -74 -34 -114 -34c-57 0 -111 29 -111 92c0 71 54 120 101 148c35 21 74 34 114 34z" fill="currentColor"/>
 </g>
 <g transform="translate(9.8264, 3.7770)">
 <rect x="-0.0697" y="-2.5000" width="0.1395" height="3.3206" ry="0.0444" fill="currentColor"/>
@@ -41,11 +54,6 @@ c79 97 144 199 144 324c0 53 -4 76 -20 124z" fill="currentColor"/>
 </g>
 <g transform="translate(9.2448, 6.2770)">
 <path transform="scale(0.0040, -0.0040)" d="M-50 0c0 28 22 50 50 50s50 -22 50 -50s-22 -50 -50 -50s-50 22 -50 50z" fill="currentColor"/>
-</g>
-<g transform="translate(8.5934, 9.1098)">
-<text font-family="serif" font-size="2.2000" text-anchor="start" fill="currentColor">
-<tspan>111</tspan>
-</text>
 </g>
 <g transform="translate(8.5934, 4.7770)">
 <path transform="scale(0.0040, -0.0040)" d="M215 137c57 0 111 -29 111 -92c0 -71 -54 -120 -101 -148c-35 -21 -74 -34 -114 -34c-57 0 -111 29 -111 92c0 71 54 120 101 148c35 21 74 34 114 34z" fill="currentColor"/>
