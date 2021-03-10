@@ -1,6 +1,6 @@
 const Editor = require('../models/composerModel');
 const editor = new Editor();
-const io = require('../io').get();
+const io = require('../ioInstance').get();
 
 io.on('connection', (client) => {
     client.on("staffCompleted", (staff) => {
@@ -57,8 +57,7 @@ const add_part_svg = (req, res, next) => {
     const index = parts.findIndex(instrument => instrument.route == route)
     const staves = serverLocalStorage.getItem(parts[index].route)
 
-    io.emit('update', {
-        route,
+    io.to(route).emit('update', {
         staves
     })
 }
@@ -66,9 +65,7 @@ const add_part_svg = (req, res, next) => {
 const scroll_part = (req, res) => {
     const instrument = req.params.instrument;
     const route = instrument.replace(/ /g, '').toLowerCase();
-    io.emit('scroll', {
-        route
-    })
+    io.to(route).emit('scroll')
 }
 
 const delete_part = (req, res) => {

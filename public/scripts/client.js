@@ -1,5 +1,14 @@
 const socket = io();
 
+//socket.emit('switch room', "oldRoute", route);
+socket.emit('create', route)
+/*
+socket.on('room event', data => {
+    console.log('room event!')
+});
+*/
+
+
 /*** Metronome ***/
 const bpmDisplay = document.querySelector(".metronome .bpm");
 const metronomeBox = document.querySelector(".metronome");
@@ -42,7 +51,7 @@ let lastStaves = (staves) => {
     }
 }
 
-const svgRoute = staff => `../svg/${staff.route}/${staff.svg}.cropped.svg`
+const svgRoute = staff => staff ? `../svg/${staff.route}/${staff.svg}.cropped.svg` : ""
 
 const completed = staff => {
     const staffId = parseInt(staff.getAttribute('staffId'))
@@ -63,9 +72,7 @@ const completed = staff => {
     } else {
         console.log(`Error: ${staffId} undefined. Cannot mark as completed`)
     }
-
     //console.log(currentData)
-
     //console.log(staves(data))
 
 }
@@ -111,16 +118,19 @@ const filterCompleted = staves => {
 }
 
 const setStaffAttrib = (staff, obj) => {
-    staff.data = svgRoute(obj)
-    staff.setAttribute('staffId', obj.id)
+    if (staff && obj) {
+        staff.data = svgRoute(obj)
+        staff.setAttribute('staffId', obj.id)
+    } else {
+        console.log("staff attrib undefined")
+    }
 }
 
 const initStaff = allStaves => {
     let staves = filterCompleted(allStaves)
-    const last = lastStaves(staves).last
-    const secondLast = lastStaves(staves).secondLast
-    const thirdLast = lastStaves(staves).thirdLast
-
+    const last = lastStaves(staves).last || console.log("last empty")
+    const secondLast = lastStaves(staves).secondLast || console.log("secondLast empty")
+    const thirdLast = lastStaves(staves).thirdLast || console.log("thirdLast empty")
     console.log("filtered staves: ", staves)
 
     switch (staves.length) {
@@ -169,9 +179,9 @@ initStaff(staves(data)); //uses 'data' from request res.render('view_part')
 
 const updateStaff = allStaves => {
     let staves = filterCompleted(allStaves)
-    const last = lastStaves(staves).last
-    const secondLast = lastStaves(staves).secondLast
-    const thirdLast = lastStaves(staves).thirdLast
+    const last = lastStaves(staves).last || console.log("last empty")
+    const secondLast = lastStaves(staves).secondLast || console.log("secondLast empty")
+    const thirdLast = lastStaves(staves).thirdLast || console.log("thirdLast empty")
 
     console.log("filtered staves: ", staves)
     scrollAll()
@@ -187,15 +197,15 @@ const updateStaff = allStaves => {
 }
 
 socket.on('update', data => {
-    if (data.route == route) {
-        update(data)
-    }
-});
-
-const update = data => { //uses data from socket.on('update)
+    //if (data.route == route) { //replace with socket 'room'
+    //        update(data)
     updateStaff(staves(data.staves))
     scrollAll()
-}
+    //}
+});
+
+//const update = data => { //uses data from socket.on('update)  
+//}
 
 const scrollAll = () => {
     stepForward(slotOne)
@@ -204,7 +214,8 @@ const scrollAll = () => {
 }
 
 socket.on('scroll', data => {
-    if (data.route == route) { //replace with socket room  socket.join(route);
-        scrollAll()
-    }
+    //if (data.route == route) { //replace with socket room  socket.join(route);
+    //   socket.join(route)
+    scrollAll()
+    //}
 });

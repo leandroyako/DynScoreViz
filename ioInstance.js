@@ -10,5 +10,5 @@ module.exports = {
             throw new Error("socket is not initialized");
         }
         return io;
-    },
+    }
 }
