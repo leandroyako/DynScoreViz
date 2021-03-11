@@ -25,15 +25,10 @@ socket.on('bpm', function(data) {
 });
 
 socket.on('beat', function(data) {
-    console.log(data);
-    //sync animation start time here??
-
-    //const counter = parseInt(data.beat) % 2;
+    //console.log(data);
     const bpm = parseFloat(data.bpm);
-    //metronomeBox.style.animation = `blinker${counter} ${60/bpm}s cubic-bezier(0, 1, 0, 1)`;
     metronomeBox.animate([
         // keyframes
-
         {
             backgroundColor: 'rgba(0, 0, 0, 0.5)'
             //            easing: 'ease-in'
@@ -47,12 +42,6 @@ socket.on('beat', function(data) {
         duration: 60 / bpm * 1000,
         iterations: 1
     });
-
-    /*
-    let elm = metronomeBox;
-    let newone = elm.cloneNode(true);
-    elm.parentNode.replaceChild(newone, elm);
-    */
 });
 /*** Scores ***/
 const slotOne = document.querySelector(".grid #one");
@@ -107,7 +96,17 @@ const state = ["next", "current", "gone"]
 
 const changeState = (staff, newState) => {
     const oldState = getOldState(staff.classList)
-    oldState ? staff.classList.replace(oldState, newState) : staff.classList.add(newState)
+    console.log("oldState", oldState)
+
+    const replaceState = () => setTimeout(() => {
+        staff.classList.replace(oldState, newState)
+    }, 0); //workaround for displaying transitions on class change
+
+    const addState = () => setTimeout(() => {
+        staff.classList.add(newState)
+    }, 0); //workaround for displaying transitions on class change
+
+    oldState ? replaceState() : addState()
     if (newState == "gone") {
         completed(staff)
     }
