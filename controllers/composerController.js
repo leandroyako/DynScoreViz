@@ -38,7 +38,7 @@ const add_part = (req, res) => {
         route
     }
     editor.addPart(part)
-    res.redirect('/') //is this path correct?
+    res.redirect('/interpreter') //is this path correct?
 }
 
 const add_part_svg = (req, res, next) => {
@@ -76,7 +76,7 @@ const delete_part = (req, res) => {
     serverLocalStorage.setItem('parts', JSON.stringify(parts));
     editor.deletePart(route); //delete part folder recursively
     io.to(route).emit("delete currentInstrument")
-    res.redirect('/');
+    res.redirect('/interpreter');
 }
 
 const toggle_staff = (req, res) => {
