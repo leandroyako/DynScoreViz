@@ -9,7 +9,7 @@ socket.on('room event', data => {
 */
 
 /*** Nav bar ***/
-console.log(localStorage.currentInstrument)
+//console.log(localStorage.currentInstrument)
 socket.on("delete currentInstrument", () => {
     delete localStorage.currentInstrument;
     document.getElementById("partitura").href = "";

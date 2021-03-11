@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 
 class editorModel {
     constructor() {}
@@ -56,13 +56,23 @@ class editorModel {
     _deleteFile(route) { // create new directory
 
         const dbPath = `./localStorage/${route}`;
-
-        fs.unlink(dbPath,
-            (err) => {
-                if (err) throw err;
-            });
-
-        console.log(`${route} file is deleted!`);
+        /*
+                fs.unlink(dbPath)
+                    .then(() => {
+                        console.log(`${route} file is deleted!`)
+                    }).catch(err => {
+                        console.error(`Something wrong happened removing ${route} file`, err)
+                    })
+        */
+        ;
+        (async () => {
+            try {
+                await fs.unlink(dbPath)
+                console.log(`${route} file is deleted!`)
+            } catch (err) {
+                console.error(`Something wrong happened removing ${route} file`, err)
+            }
+        })()
     }
 
     addPart(newPart) {
