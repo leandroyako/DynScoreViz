@@ -2,12 +2,9 @@ const Editor = require('../models/composerModel');
 const editor = new Editor();
 const io = require('../ioInstance').get();
 
-io.on('connection', (client) => {
-    client.on("staff completed", (staff) => {
-        console.log(staff)
-        editor.toggleStaff(staff.instrument, staff.id)
-    })
-});
+const strip_route = (string) => {
+    return string.replace(/ /g, '').toLowerCase()
+};
 
 const index = (req, res) => {
     serverLocalStorage.getItem('parts') || serverLocalStorage.setItem('parts', JSON.stringify([]))
@@ -21,7 +18,7 @@ const index = (req, res) => {
 const view_part = (req, res) => {
     const parts = JSON.parse(serverLocalStorage.parts)
     const instrument = req.params.instrument
-    const route = req.params.route || instrument.replace(/ /g, '').toLowerCase()
+    const route = req.params.route || strip_route(instrument)
     const index = parts.findIndex(instrument => instrument.route == route)
     const staves = serverLocalStorage.getItem(parts[index].route)
     res.render('view_part', {
@@ -32,20 +29,20 @@ const view_part = (req, res) => {
 
 const add_part = (req, res) => {
     const instrument = req.params.instrument
-    const route = instrument.replace(/ /g, '').toLowerCase() //move upper tree
+    const route = strip_route(instrument)
     const part = {
         instrument,
         route
     }
     editor.addPart(part)
-    res.redirect('/interpreter') //is this path correct?
+    //res.redirect('/') not working?
 }
 
 const add_part_svg = (req, res, next) => {
     const parts = JSON.parse(serverLocalStorage.parts)
     const instrument = req.params.instrument
     const svg = req.params.svg_path
-    const route = instrument.replace(/ /g, '').toLowerCase()
+    const route = strip_route(instrument)
     const staff = {
         instrument,
         route,
@@ -63,8 +60,8 @@ const add_part_svg = (req, res, next) => {
 }
 
 const scroll_part = (req, res) => {
-    const instrument = req.params.instrument;
-    const route = instrument.replace(/ /g, '').toLowerCase();
+    const instrument = req.params.instrument
+    const route = strip_route(instrument)
     io.to(route).emit('scroll')
 }
 
@@ -81,10 +78,17 @@ const delete_part = (req, res) => {
 
 const toggle_staff = (req, res) => {
     const instrument = req.params.instrument
-    const route = instrument.replace(/ /g, '').toLowerCase()
+    //const route = strip_route(instrument)
     const id = req.params.id
     editor.toggleStaff(instrument, id)
 }
+
+io.on('connection', (client) => {
+    client.on("staff completed", (staff) => {
+        //console.log(staff)
+        editor.toggleStaff(staff.instrument, staff.id)
+    })
+});
 
 module.exports = {
     index,

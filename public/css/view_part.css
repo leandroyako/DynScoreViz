@@ -8,24 +8,8 @@
     float: right;
     background-color: #222;
     color: #fff;
-    /*
-    animation: blinker 1s cubic-bezier(0.16, 1, 0.3, 1);
-    */
 }
 
-/*
-@keyframes blinker0 {
-    50% {
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-}
-
-@keyframes blinker1 {
-    50% {
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-}
-*/
 .hl {
     border-bottom: 1px solid #b6bdc3;
     width: 100%;
@@ -67,11 +51,6 @@
     top: 50vh;
     opacity: 65%;
     transition: opacity 2s ease-out, transform 0.5s ease-in, top 0.5s ease-in;
-}
-
-.grid .afterNext {
-    /* unused? */
-    top: 100vh;
 }
 
 .grid .gone {

@@ -73,7 +73,7 @@ const svgRoute = staff => staff ? `../svg/${staff.route}/${staff.svg}.cropped.sv
 
 const completed = staff => {
     const staffId = parseInt(staff.getAttribute('staffId'))
-    console.log(`Staff ${staffId} completed`)
+    //console.log(`Staff ${staffId} completed`)
     //emit id to server and mark completed staff in instrument db
     let currentData = staves(data)
 
@@ -109,7 +109,7 @@ const state = ["next", "current", "gone"]
 
 const changeState = (staff, newState) => {
     const oldState = getOldState(staff.classList) || undefined
-    console.log("oldState", oldState)
+    //console.log("oldState", oldState)
 
     const replaceState = () => setTimeout(() => {
         staff.classList.replace(oldState, newState)
