@@ -25,6 +25,7 @@ module.exports = io => {
                     bpm
                 });
                 lastBpm = bpm;
+                serverLocalStorage.setItem('bpm', lastBpm)
                 //console.log(bpm);
             }
         });

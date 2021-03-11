@@ -15,9 +15,11 @@ const view_part = (req, res) => {
     const route = req.params.route || instrument.replace(/ /g, '').toLowerCase()
     const index = parts.findIndex(instrument => instrument.route == route)
     const staves = serverLocalStorage.getItem(parts[index].route)
+    const bpm = serverLocalStorage.getItem('bpm')
     res.render('view_part', {
         data: staves,
-        route: route
+        route: route,
+        bpm: bpm
     })
 }
 

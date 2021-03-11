@@ -13,11 +13,11 @@ document.getElementById("partitura").href = `/interpreter/${localStorage.current
 const bpmDisplay = document.querySelector(".metronome .bpm");
 const metronomeBox = document.querySelector(".metronome");
 
-bpmDisplay.innerHTML = localStorage.currentBpm || "...";
+bpmDisplay.innerHTML = bpmOnLoad || "...";
 
 socket.on('bpm', function(data) {
     bpmDisplay.innerHTML = data.bpm;
-    localStorage.currentBpm = data.bpm;
+    //localStorage.currentBpm = data.bpm;
 
     //metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1)`;
     //metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1)`;
