@@ -37,7 +37,7 @@
     height: 47vh;
     max-width: 100vh;
     pointer-events: none;
-    transition: opacity 1.5s ease-in-out, transform 0.5s ease-in-out, top 0.5s ease-in-out;
+    transition: opacity 1.5s ease-in, transform 0.5s ease-in, top 0.5s ease-in;
     position: fixed;
 }
 
@@ -45,7 +45,7 @@
     height: 20vh;
     max-width: 50vh;
     pointer-events: none;
-    transition: opacity 1.5s ease-in-out, transform 0.5s ease-in-out, top 0.5s ease-in-out;
+    transition: opacity 1.5s ease-in, transform 0.5s ease-in, top 0.5s ease-in;
     position: fixed;
 }
 
@@ -59,7 +59,6 @@
     opacity: 65%;
 }
 
-
 .grid .afterNext {
     /* deprecated? */
     top: 100vh;
@@ -67,7 +66,9 @@
 
 .grid .gone {
     top: 100vh;
-    animation: gone 1s
+    transition: opacity 1s ease-out, transform 0.5s ease-out, top 0.5s ease-out;
+    animation: gone 1s;
+    opacity: 0;
 }
 
 @keyframes gone {
@@ -77,20 +78,19 @@
 
     99% {
         top: -50vh;
-        opacity: 0
     }
 
     100% {
         top: 100vh;
-        opacity: 0;
     }
 }
 
 /* Fade-Out Effect */
+/*
 .hidden {
     opacity: 0;
 }
-
+*/
 .slide-top {
     -webkit-animation: slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     animation: slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;

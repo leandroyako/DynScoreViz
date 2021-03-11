@@ -3,7 +3,7 @@ const editor = new Editor();
 const io = require('../ioInstance').get();
 
 io.on('connection', (client) => {
-    client.on("staffCompleted", (staff) => {
+    client.on("staff completed", (staff) => {
         console.log(staff)
         editor.toggleStaff(staff.instrument, staff.id)
     })
@@ -74,7 +74,8 @@ const delete_part = (req, res) => {
     const allParts = JSON.parse(stored);
     const parts = allParts.filter(part => part.route !== route)
     serverLocalStorage.setItem('parts', JSON.stringify(parts));
-    //delete part folder recursively
+    editor.deletePart(route); //delete part folder recursively
+    io.to(route).emit("delete currentInstrument")
     res.redirect('/');
 }
 

@@ -70,6 +70,27 @@ osc.on('newPart', message => {
         .end()
 })
 
+osc.on('deletePart', message => {
+    http
+        .request({
+                hostname: "localhost",
+                port: 3000,
+                path: encodeURI(`/composer/delete/${message.args[0]}`)
+            },
+            res => {
+                let data = ""
+
+                res.on("data", d => {
+                    data += d
+                })
+                res.on("end", () => {
+                    data
+                })
+            }
+        )
+        .end()
+})
+
 osc.on('scroll', message => {
     http
         .request({

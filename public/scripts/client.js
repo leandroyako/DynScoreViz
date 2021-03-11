@@ -8,6 +8,13 @@ socket.on('room event', data => {
 });
 */
 
+/*** Nav bar ***/
+console.log(localStorage.currentInstrument)
+socket.on("delete currentInstrument", () => {
+    delete localStorage.currentInstrument;
+    document.getElementById("partitura").href = "";
+})
+document.getElementById("partitura").href = `/interpreter/${localStorage.currentInstrument}`;
 
 /*** Metronome ***/
 const bpmDisplay = document.querySelector(".metronome .bpm");
@@ -63,18 +70,15 @@ const completed = staff => {
         return e.id
     }).indexOf(staffId);
 
-    //console.log("WTF", currentData[pos])
-
     if (currentData[pos]) {
         currentData[pos].complete = true
         data = JSON.stringify(currentData)
-        socket.emit("staffCompleted", currentData[pos])
+        socket.emit("staff completed", currentData[pos])
     } else {
         console.log(`Error: ${staffId} undefined. Cannot mark as completed`)
     }
     //console.log(currentData)
     //console.log(staves(data))
-
 }
 
 const state = ["next", "current", "gone"]
@@ -122,6 +126,7 @@ const setStaffAttrib = (staff, obj) => {
         staff.data = svgRoute(obj)
         staff.setAttribute('staffId', obj.id)
     } else {
+        staff.innerHTML = "Esperando partitura..."
         console.log("staff attrib undefined")
     }
 }
@@ -136,9 +141,9 @@ const initStaff = allStaves => {
     switch (staves.length) {
         case 0:
             slotOne.innerHTML = "Esperando partitura..."
-            slotOne.classList.remove('hidden')
-            slotTwo.classList.add('hidden')
-            slotThree.classList.add('hidden')
+            //slotOne.classList.remove('hidden')
+            //slotTwo.classList.add('hidden')
+            //slotThree.classList.add('hidden')
             gone(slotTwo)
             gone(slotThree)
             break
@@ -147,9 +152,9 @@ const initStaff = allStaves => {
             next(slotOne)
             gone(slotTwo)
             current(slotThree)
-            slotOne.classList.remove('hidden')
-            slotTwo.classList.add('hidden')
-            slotThree.classList.add('hidden')
+            //slotOne.classList.remove('hidden')
+            //slotTwo.classList.add('hidden')
+            //slotThree.classList.add('hidden')
             break
         case 2:
             setStaffAttrib(slotOne, secondLast)
@@ -157,9 +162,9 @@ const initStaff = allStaves => {
             setStaffAttrib(slotTwo, last)
             next(slotTwo)
             gone(slotThree)
-            slotOne.classList.remove('hidden')
-            slotTwo.classList.remove('hidden')
-            slotThree.classList.add('hidden')
+            //slotOne.classList.remove('hidden')
+            //slotTwo.classList.remove('hidden')
+            //slotThree.classList.add('hidden')
             break
         default:
             setStaffAttrib(slotOne, thirdLast)
@@ -168,9 +173,9 @@ const initStaff = allStaves => {
             next(slotTwo)
             setStaffAttrib(slotThree, last)
             gone(slotThree)
-            slotOne.classList.remove('hidden')
-            slotTwo.classList.remove('hidden')
-            slotThree.classList.add('hidden')
+            //slotOne.classList.remove('hidden')
+            //slotTwo.classList.remove('hidden')
+            //slotThree.classList.add('hidden')
             break
     }
 }
@@ -191,9 +196,9 @@ const updateStaff = allStaves => {
     next(slotTwo)
     setStaffAttrib(slotThree, last)
     gone(slotThree)
-    slotOne.classList.remove('hidden')
-    slotTwo.classList.remove('hidden')
-    slotThree.classList.add('hidden')
+    //slotOne.classList.remove('hidden')
+    //slotTwo.classList.remove('hidden')
+    //slotThree.classList.add('hidden')
 }
 
 socket.on('update', data => {

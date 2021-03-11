@@ -40,6 +40,31 @@ class editorModel {
         });
     }
 
+    _deleteDir(dir) { // create new directory
+
+        const svgPath = `./public/svg/${dir}`;
+
+        fs.rmdir(svgPath, {
+            recursive: true
+        }, (err) => {
+            if (err) throw err;
+        });
+
+        console.log(`${dir} is deleted!`);
+    }
+
+    _deleteFile(route) { // create new directory
+
+        const dbPath = `./localStorage/${route}`;
+
+        fs.unlink(dbPath,
+            (err) => {
+                if (err) throw err;
+            });
+
+        console.log(`${route} file is deleted!`);
+    }
+
     addPart(newPart) {
         this.route = 'parts';
         this._pickParts(); //parse parts
@@ -61,6 +86,13 @@ class editorModel {
         } else {
             console.log(`${newPart.instrument} part already exists`);
         }
+    }
+
+    deletePart(route) {
+        this.route = 'parts'
+        this._pickParts()
+        this._deleteDir(route)
+        this._deleteFile(route)
     }
 
     addStaff(newStaff) {
