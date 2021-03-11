@@ -3,7 +3,15 @@ var nav = document.querySelector("nav");
 
 function toggleNav() {
     nav.classList.toggle("hide");
+    if (!nav.classList.contains("hide")) {
+        setTimeout(() => {
+            nav.classList.toggle("hide")
+        }, 5000)
+    }
 }
+
+toggleNav(); //toggleNav() on load for autohide
+
 /* When user clicks inside window, toggle the navbar */
 document.addEventListener('click', function(event) {
     toggleNav();

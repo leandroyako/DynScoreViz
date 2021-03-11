@@ -75,7 +75,7 @@
 }
 
 .grid .gone {
-    /*top: 100vh;*/
+    top: 100vh;
     transition: opacity 1s ease-out, transform 0.5s ease-out, top 0.5s ease-out;
     animation: gone 1s;
     opacity: 0;
@@ -100,7 +100,8 @@
 .hidden {
     opacity: 0;
 }
-*/
+
+/*
 .slide-top {
     -webkit-animation: slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     animation: slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -118,6 +119,8 @@
    * animation slide-top
    * ----------------------------------------
    */
+
+/*  
 @-webkit-keyframes slide-top {
     0% {
         -webkit-transform: translateY(0);
@@ -141,3 +144,4 @@
         transform: translateY(-50vh);
     }
 }
+*/

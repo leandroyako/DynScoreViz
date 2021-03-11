@@ -18,7 +18,6 @@ bpmDisplay.innerHTML = bpmOnLoad || "...";
 socket.on('bpm', function(data) {
     bpmDisplay.innerHTML = data.bpm;
     //localStorage.currentBpm = data.bpm;
-
     //metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1)`;
     //metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1)`;
     //console.log(data)
@@ -56,12 +55,13 @@ let lastStaves = (staves) => {
     const last = staves[staves.length - 1]
     const secondLast = staves[staves.length - 2]
     const thirdLast = staves[staves.length - 3]
-    console.log('lastStaves at ws.js')
-    console.log({
-        thirdLast,
-        secondLast,
-        last
-    })
+    /* console.log('lastStaves at ws.js')
+     console.log({
+         thirdLast,
+         secondLast,
+         last
+     })
+     */
     return {
         thirdLast,
         secondLast,
@@ -80,14 +80,27 @@ const completed = staff => {
     pos = currentData.map(e => {
         return e.id
     }).indexOf(staffId);
-
-    if (currentData[pos]) {
+    /*
+        if (currentData[pos]) {
+            currentData[pos].complete = true
+            data = JSON.stringify(currentData)
+            socket.emit("staff completed", currentData[pos])
+        } else {
+            console.log(`Error: ${staffId} undefined. Cannot mark as completed`)
+        }
+        */
+    try {
         currentData[pos].complete = true
         data = JSON.stringify(currentData)
         socket.emit("staff completed", currentData[pos])
-    } else {
-        console.log(`Error: ${staffId} undefined. Cannot mark as completed`)
+    } catch (error) {
+        if (error instanceof TypeError) {
+            console.error(`Error: ${staffId} undefined. Cannot mark staff as completed`)
+        } else {
+            console.log(error)
+        }
     }
+
     //console.log(currentData)
     //console.log(staves(data))
 }
@@ -95,7 +108,7 @@ const completed = staff => {
 const state = ["next", "current", "gone"]
 
 const changeState = (staff, newState) => {
-    const oldState = getOldState(staff.classList)
+    const oldState = getOldState(staff.classList) || undefined
     console.log("oldState", oldState)
 
     const replaceState = () => setTimeout(() => {
@@ -107,6 +120,7 @@ const changeState = (staff, newState) => {
     }, 0); //workaround for displaying transitions on class change
 
     oldState ? replaceState() : addState()
+
     if (newState == "gone") {
         completed(staff)
     }
