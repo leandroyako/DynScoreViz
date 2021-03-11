@@ -1,15 +1,8 @@
 const socket = io();
 
-//socket.emit('switch room', "oldRoute", route);
 socket.emit('create', route)
-/*
-socket.on('room event', data => {
-    console.log('room event!')
-});
-*/
 
 /*** Nav bar ***/
-//console.log(localStorage.currentInstrument)
 socket.on("delete currentInstrument", () => {
     delete localStorage.currentInstrument;
     document.getElementById("partitura").href = "";
@@ -20,18 +13,47 @@ document.getElementById("partitura").href = `/interpreter/${localStorage.current
 const bpmDisplay = document.querySelector(".metronome .bpm");
 const metronomeBox = document.querySelector(".metronome");
 
+bpmDisplay.innerHTML = localStorage.currentBpm || "...";
+
 socket.on('bpm', function(data) {
     bpmDisplay.innerHTML = data.bpm;
-    metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1) infinite`;
+    localStorage.currentBpm = data.bpm;
+
+    //metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1)`;
+    //metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1)`;
+    //console.log(data)
 });
 
-/*
 socket.on('beat', function(data) {
     console.log(data);
-    sync animation start time here??
-});
-*/
+    //sync animation start time here??
 
+    //const counter = parseInt(data.beat) % 2;
+    const bpm = parseFloat(data.bpm);
+    //metronomeBox.style.animation = `blinker${counter} ${60/bpm}s cubic-bezier(0, 1, 0, 1)`;
+    metronomeBox.animate([
+        // keyframes
+
+        {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)'
+            //            easing: 'ease-in'
+        },
+        {
+            backgroundColor: 'rgba(0, 0, 0, 0)'
+            //            easing: 'ease-out'
+        }
+    ], {
+        // timing options
+        duration: 60 / bpm * 1000,
+        iterations: 1
+    });
+
+    /*
+    let elm = metronomeBox;
+    let newone = elm.cloneNode(true);
+    elm.parentNode.replaceChild(newone, elm);
+    */
+});
 /*** Scores ***/
 const slotOne = document.querySelector(".grid #one");
 const slotTwo = document.querySelector(".grid #two");

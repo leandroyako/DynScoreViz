@@ -13,7 +13,8 @@ module.exports = io => {
             beat = 0 ^ beat;
             if (0 < beat - lastBeat) {
                 io.emit('beat', {
-                    beat
+                    beat,
+                    bpm
                 });
                 lastBeat = beat;
             }
