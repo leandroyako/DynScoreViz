@@ -55,9 +55,7 @@ const add_part_svg = (req, res, next) => {
     const index = parts.findIndex(instrument => instrument.route == route)
     const staves = serverLocalStorage.getItem(parts[index].route)
 
-    io.to(route).emit('update', {
-        staves
-    })
+    io.to(route).emit('update', staves)
 }
 
 const scroll_part = (req, res) => {

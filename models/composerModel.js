@@ -144,8 +144,8 @@ class editorModel {
         this._pickInstrument(instrument);
         const staff = this.staves.find(x => x.id == id);
         if (staff) {
-            staff.complete = !staff.complete;
-            //staff.complete = true;
+            //staff.complete = !staff.complete;
+            staff.complete = true;
             //maybe there is no use case for 'toggle', just mark as complete... rethink
         }
         this._commit(this.staves);

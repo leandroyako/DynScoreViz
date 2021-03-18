@@ -75,22 +75,30 @@ const svgRoute = staff => staff ? `../svg/${staff.route}/${staff.svg}.cropped.sv
 
 const completed = staff => {
     const staffId = parseInt(staff.getAttribute('staffId'))
-    //console.log(`Staff ${staffId} completed`)
-    //emit id to server and mark completed staff in instrument db
-    //let currentData = staves(data)
+
+    /* ERROR
+    'currentData' no incluye el ultimo staff, difiere del JSON con la data del instrumento en el server
+    */
+
     let currentData = JSON.parse(data)
 
     pos = currentData.map(e => {
         return e.id
-    }).indexOf(staffId);
+    }).indexOf(staffId); //falla porque no encuentra el Id del ultimo objeto
+
+    console.log("COMPLETED")
+    console.log("staff: ", staff)
+    console.log("currentData: ", currentData)
+    console.log("staffId: ", staffId)
+    console.log("pos: ", pos)
+    console.log("data: ", data)
 
     try {
         currentData[pos].complete = true
-        //currentData[pos].state = staff.getAttribute('state') 
         data = JSON.stringify(currentData)
-        //data = filterCompleted(data) //CHECK
         socket.emit("staff completed", currentData[pos])
-        //socket.emit("staff state", currentData[pos])
+
+
     } catch (error) {
         if (error instanceof TypeError) {
             console.error(`Error: ${staffId} undefined. Cannot mark staff as completed`)
@@ -109,6 +117,10 @@ const changeState = (staff, newState) => {
     const oldState = staff.getAttribute('state')
     //console.log("change state staff: ", staff)
 
+    if (oldState == "gone") {
+        completed(staff)
+    }
+
     const replaceState = () => setTimeout(() => {
         staff.classList.replace(oldState, newState)
     }, 0); //workaround for displaying transitions on class change
@@ -123,11 +135,13 @@ const changeState = (staff, newState) => {
     staff.setAttribute('state', newState) //store state on element
 
     const staffId = parseInt(staff.getAttribute('staffId'))
-    console.log("change state staffId: ", staffId)
+    //console.log("change state staffId: ", staffId)
     socket.emit("staff state", route, staffId, newState)
+    /*
     if (newState == "gone") {
         completed(staff)
     }
+    */
 }
 
 const gone = staff => {
@@ -242,8 +256,10 @@ const updateStaff = allStaves => {
     scrollAll()
 }
 
-socket.on('update', data => {
-    updateStaff(JSON.parse(data.staves)) //new data from server sent through socket
+socket.on('update', staves => {
+    console.log('updateStaff: ', JSON.parse(staves))
+    updateStaff(JSON.parse(staves)) //new data from server sent through socket
+
 });
 
 const scrollAll = () => {
