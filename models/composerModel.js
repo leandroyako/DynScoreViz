@@ -7,7 +7,6 @@ class editorModel {
         this.instrument = instrument;
         this.route = instrument.replace(/ /g, '').toLowerCase();
         const stored = serverLocalStorage.getItem(this.route);
-        //console.log(stored);
         this.staves = JSON.parse(stored) || []
     }
 
@@ -19,17 +18,14 @@ class editorModel {
     _pickParts() {
         serverLocalStorage.getItem('parts') ||
             serverLocalStorage.setItem('parts', JSON.stringify([]));
-
         this.parts = JSON.parse(serverLocalStorage.getItem('parts'))
     }
 
     _commit(changes) {
-        //console.log(this.route);
-        //console.log(changes);
         serverLocalStorage.setItem(this.route, JSON.stringify(changes))
     }
 
-    _createDir(dir) { // create new directory
+    _createDir(dir) {
 
         const svgPath = `./public/svg/${dir}`;
 
@@ -40,7 +36,7 @@ class editorModel {
         });
     }
 
-    _deleteDir(dir) { // create new directory
+    _deleteDir(dir) {
 
         const svgPath = `./public/svg/${dir}`;
 
@@ -53,17 +49,9 @@ class editorModel {
         console.log(`${dir} is deleted!`);
     }
 
-    _deleteFile(route) { // create new directory
-
+    _deleteFile(route) {
         const dbPath = `./localStorage/${route}`;
-        /*
-                fs.unlink(dbPath)
-                    .then(() => {
-                        console.log(`${route} file is deleted!`)
-                    }).catch(err => {
-                        console.error(`Something wrong happened removing ${route} file`, err)
-                    })
-        */
+
         ;
         (async () => {
             try {
@@ -77,11 +65,10 @@ class editorModel {
 
     addPart(newPart) {
         this.route = 'parts';
-        this._pickParts(); //parse parts
+        this._pickParts(); //parse parts JSON
         this._createDir(newPart.route);
         this._createInstrument(newPart.route);
-        //console.log("Adding new part to:")
-        //console.log(this.parts);
+
         const currentId = this.parts.length > 0 ? this.parts[this.parts.length - 1].id + 1 : 0
         const part = {
             id: currentId,
@@ -115,24 +102,31 @@ class editorModel {
             route: newStaff.route,
             instrument: newStaff.instrument,
             complete: false,
+            state: undefined
         }
         this.staves.push(staff);
         this._commit(this.staves);
     }
+
     // Map through all staves, and replace the content of the staff with the specified id
     editStaff(id, updatedStaff) {
         this._pickInstrument(updatedStaff.instrument);
 
+        //just push and pop whole object by id
+
+        /*
         this.staves = this.staves.map(staff =>
             staff.id === id ? {
                 id: staff.id,
                 instrument: updatedStaff.instrument,
                 route: updatedStaff.route,
                 svg: updatedStaff.svg,
-                complete: staff.complete
+                complete: staff.complete,
+                state: staff.state
             } :
-            staff,
+            staff
         )
+        */
         this._commit(this.staves);
     }
 
@@ -145,18 +139,26 @@ class editorModel {
     }
 
     // Flip the 'complete' boolean on the specified staff
+    //maybe there is no use case for 'toggle', just mark as complete... rethink
     toggleStaff(instrument, id) {
         this._pickInstrument(instrument);
-        this.staves = this.staves.map(staff =>
-            staff.id === id ? {
-                id: staff.id,
-                instrument: staff.instrument,
-                route: staff.route,
-                svg: staff.svg,
-                complete: !staff.complete
-            } :
-            staff,
-        );
+        const staff = this.staves.find(x => x.id == id);
+        if (staff) {
+            staff.complete = !staff.complete;
+            //staff.complete = true;
+            //maybe there is no use case for 'toggle', just mark as complete... rethink
+        }
+        this._commit(this.staves);
+    }
+
+    staffState(instrument, id, state) {
+        this._pickInstrument(instrument);
+
+        const staff = this.staves.find(x => x.id == id);
+        if (staff) {
+            staff.state = state;
+        }
+
         this._commit(this.staves);
     }
 

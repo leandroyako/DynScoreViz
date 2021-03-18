@@ -13,7 +13,7 @@ document.getElementById("partitura").href = `/interpreter/${localStorage.current
 const bpmDisplay = document.querySelector(".metronome .bpm");
 const metronomeBox = document.querySelector(".metronome");
 
-bpmDisplay.innerHTML = bpmOnLoad || "...";
+bpmDisplay.innerHTML = setupBpm || "...";
 
 socket.on('bpm', function(data) {
     bpmDisplay.innerHTML = data.bpm;
@@ -47,9 +47,11 @@ const slotOne = document.querySelector(".grid #one");
 const slotTwo = document.querySelector(".grid #two");
 const slotThree = document.querySelector(".grid #three");
 
+/*
 let staves = (staves) => {
     return JSON.parse(staves);
 };
+*/
 
 let lastStaves = (staves) => {
     const last = staves[staves.length - 1]
@@ -75,24 +77,20 @@ const completed = staff => {
     const staffId = parseInt(staff.getAttribute('staffId'))
     //console.log(`Staff ${staffId} completed`)
     //emit id to server and mark completed staff in instrument db
-    let currentData = staves(data)
+    //let currentData = staves(data)
+    let currentData = JSON.parse(data)
 
     pos = currentData.map(e => {
         return e.id
     }).indexOf(staffId);
-    /*
-        if (currentData[pos]) {
-            currentData[pos].complete = true
-            data = JSON.stringify(currentData)
-            socket.emit("staff completed", currentData[pos])
-        } else {
-            console.log(`Error: ${staffId} undefined. Cannot mark as completed`)
-        }
-        */
+
     try {
         currentData[pos].complete = true
+        //currentData[pos].state = staff.getAttribute('state') 
         data = JSON.stringify(currentData)
+        //data = filterCompleted(data) //CHECK
         socket.emit("staff completed", currentData[pos])
+        //socket.emit("staff state", currentData[pos])
     } catch (error) {
         if (error instanceof TypeError) {
             console.error(`Error: ${staffId} undefined. Cannot mark staff as completed`)
@@ -100,7 +98,6 @@ const completed = staff => {
             console.log(error)
         }
     }
-
     //console.log(currentData)
     //console.log(staves(data))
 }
@@ -108,8 +105,9 @@ const completed = staff => {
 const state = ["next", "current", "gone"]
 
 const changeState = (staff, newState) => {
-    const oldState = getOldState(staff.classList) || undefined
-    //console.log("oldState", oldState)
+    //const oldState = getOldState(staff.classList) || undefined //reemplazar
+    const oldState = staff.getAttribute('state')
+    //console.log("change state staff: ", staff)
 
     const replaceState = () => setTimeout(() => {
         staff.classList.replace(oldState, newState)
@@ -121,6 +119,12 @@ const changeState = (staff, newState) => {
 
     oldState ? replaceState() : addState()
 
+    staff.removeAttribute('state')
+    staff.setAttribute('state', newState) //store state on element
+
+    const staffId = parseInt(staff.getAttribute('staffId'))
+    console.log("change state staffId: ", staffId)
+    socket.emit("staff state", route, staffId, newState)
     if (newState == "gone") {
         completed(staff)
     }
@@ -136,7 +140,7 @@ const next = staff => {
     changeState(staff, 'next')
 }
 
-const getOldState = staffClassList => {
+const getOldStateClass = staffClassList => {
     const classList = Array.from(staffClassList)
     const oldState = classList.filter(
         stateClass => state.includes(stateClass)
@@ -145,7 +149,8 @@ const getOldState = staffClassList => {
 }
 
 const stepForward = staff => {
-    const oldState = getOldState(staff.classList)
+    //const oldState = getOldStateClass(staff.classList)
+    const oldState = staff.getAttribute('state')
     let index = state.indexOf(oldState)
     let nextIndex = (index + 1) % state.length
     let nextState = state[nextIndex]
@@ -159,9 +164,11 @@ const filterCompleted = staves => {
 const setStaffAttrib = (staff, obj) => {
     if (staff && obj) {
         staff.data = svgRoute(obj)
+        staff.innerHTML = ""
         staff.setAttribute('staffId', obj.id)
     } else {
         staff.innerHTML = "Esperando partitura..."
+        //   staff.data = ""
         console.log("staff attrib undefined")
     }
 }
@@ -173,34 +180,32 @@ const initStaff = allStaves => {
     const thirdLast = lastStaves(staves).thirdLast || console.log("thirdLast empty")
     console.log("filtered staves: ", staves)
 
+    console.log("thirdLast", thirdLast) //undefined
+
     switch (staves.length) {
         case 0:
             slotOne.innerHTML = "Esperando partitura..."
-            //slotOne.classList.remove('hidden')
-            //slotTwo.classList.add('hidden')
-            //slotThree.classList.add('hidden')
+            next(slotOne)
             gone(slotTwo)
-            gone(slotThree)
+            current(slotThree)
+            slotThree.classList.add('hidden')
             break
         case 1:
             setStaffAttrib(slotOne, last)
             next(slotOne)
             gone(slotTwo)
             current(slotThree)
-            //slotOne.classList.remove('hidden')
-            //slotTwo.classList.add('hidden')
-            //slotThree.classList.add('hidden')
+            slotThree.innerHTML = "Esperando partitura..."
             break
-        case 2:
+            //case 2:
+        default:
             setStaffAttrib(slotOne, secondLast)
             current(slotOne)
             setStaffAttrib(slotTwo, last)
             next(slotTwo)
             gone(slotThree)
-            //slotOne.classList.remove('hidden')
-            //slotTwo.classList.remove('hidden')
-            //slotThree.classList.add('hidden')
             break
+            /*
         default:
             setStaffAttrib(slotOne, thirdLast)
             current(slotOne)
@@ -208,14 +213,12 @@ const initStaff = allStaves => {
             next(slotTwo)
             setStaffAttrib(slotThree, last)
             gone(slotThree)
-            //slotOne.classList.remove('hidden')
-            //slotTwo.classList.remove('hidden')
-            //slotThree.classList.add('hidden')
             break
+            */
     }
 }
 
-initStaff(staves(data)); //uses 'data' from request res.render('view_part')
+initStaff(JSON.parse(data)); //uses 'data' from request res.render('view_part')
 
 const updateStaff = allStaves => {
     let staves = filterCompleted(allStaves)
@@ -223,29 +226,25 @@ const updateStaff = allStaves => {
     const secondLast = lastStaves(staves).secondLast || console.log("secondLast empty")
     const thirdLast = lastStaves(staves).thirdLast || console.log("thirdLast empty")
 
+    slotOne.classList.remove('hidden')
+    slotTwo.classList.remove('hidden')
+    slotThree.classList.remove('hidden')
+
     console.log("filtered staves: ", staves)
-    scrollAll()
+
     setStaffAttrib(slotOne, thirdLast)
     current(slotOne)
     setStaffAttrib(slotTwo, secondLast)
     next(slotTwo)
     setStaffAttrib(slotThree, last)
     gone(slotThree)
-    //slotOne.classList.remove('hidden')
-    //slotTwo.classList.remove('hidden')
-    //slotThree.classList.add('hidden')
+
+    scrollAll()
 }
 
 socket.on('update', data => {
-    //if (data.route == route) { //replace with socket 'room'
-    //        update(data)
-    updateStaff(staves(data.staves))
-    scrollAll()
-    //}
+    updateStaff(JSON.parse(data.staves)) //new data from server sent through socket
 });
-
-//const update = data => { //uses data from socket.on('update)  
-//}
 
 const scrollAll = () => {
     stepForward(slotOne)
@@ -254,8 +253,5 @@ const scrollAll = () => {
 }
 
 socket.on('scroll', data => {
-    //if (data.route == route) { //replace with socket room  socket.join(route);
-    //   socket.join(route)
     scrollAll()
-    //}
 });

@@ -11,20 +11,20 @@
     <div class="hl"></div>
     <div class="grid">
         <object id="one" type='image/svg+xml' data="">
-            <img src="/svg-no.png" alt="No SVG support">
+            <img src="/svg-no.png" alt="Error loading svg">
         </object>
         <object id="two" type='image/svg+xml' data="">
-            <img src="/svg-no.png" alt="No SVG support">
+            <img src="/svg-no.png" alt="Error loading svg">
         </object>
         <object id="three" type='image/svg+xml' data="">
-            <img src="/svg-no.png" alt="No SVG support">
+            <img src="/svg-no.png" alt="Error loading svg">
         </object>
     </div>
 
     <script>
         let data = '<%- data%>';
         let route = '<%- route%>';
-        let bpmOnLoad = '<%- bpm%>';
+        let setupBpm = '<%- bpm%>';
     </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="../scripts/fullscreen.js"></script>

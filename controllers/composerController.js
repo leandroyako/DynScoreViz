@@ -47,6 +47,7 @@ const add_part_svg = (req, res, next) => {
         instrument,
         route,
         svg,
+        state: undefined
     }
 
     editor.addStaff(staff);
@@ -87,6 +88,12 @@ io.on('connection', (client) => {
     client.on("staff completed", (staff) => {
         //console.log(staff)
         editor.toggleStaff(staff.instrument, staff.id)
+    })
+
+    client.on("staff state", (route, staffId, newState) => { //filter by room
+        //console.log()
+        //editor.staffState(staff.instrument, staff.id, staff.state)
+        editor.staffState(route, staffId, newState)
     })
 });
 
