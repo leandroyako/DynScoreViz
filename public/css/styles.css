@@ -77,7 +77,8 @@ h3 {
     margin-left: 20px;
 }
 
-/* index styles */
+/* 
+
 .blogs a {
     display: block;
     margin: 40px 0;
@@ -89,7 +90,7 @@ h3 {
     color: crimson;
 }
 
-/* details styles */
+
 .details {
     position: relative;
 }
@@ -107,7 +108,7 @@ h3 {
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* create styles */
+
 .create-blog form {
     max-width: 400px;
     margin: 0 auto;
@@ -139,3 +140,4 @@ textarea {
     font-size: 1.2em;
     cursor: pointer;
 }
+*/

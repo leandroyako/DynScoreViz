@@ -6,7 +6,10 @@
 
     <%- include("./partials/nav.ejs") %>
     <div class="metronome">
-        <p class="bpm"><%= bpm %></p>
+        <div id="circle" class="bpm">
+            <%= bpm %>
+            <!--    <p class="bpm"><%= bpm %></p> -->
+        </div>
     </div>
     <div class="hl"></div>
     <div class="grid">

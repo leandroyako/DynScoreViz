@@ -11,8 +11,8 @@ document.getElementById("partitura").href = `/interpreter/${localStorage.current
 
 /*** Metronome ***/
 const bpmDisplay = document.querySelector(".metronome .bpm");
-const metronomeBox = document.querySelector(".metronome");
-
+//const metronomeBox = document.querySelector(".metronome");
+const metronomeBox = document.querySelector(".metronome #circle");
 bpmDisplay.innerHTML = setupBpm || "...";
 
 socket.on('bpm', (data) => {
@@ -20,16 +20,17 @@ socket.on('bpm', (data) => {
 });
 
 socket.on('beat', function(data) {
-    //console.log(data);
     const bpm = parseFloat(data.bpm);
     metronomeBox.animate([
         // keyframes
         {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)'
+            background: 'rgba(0, 0, 0, 0.5)'
+            //backgroundColor: 'rgba(0, 0, 0, 0.5)'
             //            easing: 'ease-in'
         },
         {
-            backgroundColor: 'rgba(0, 0, 0, 0)'
+            background: 'rgba(0, 0, 0, 0)'
+            //backgroundColor: 'rgba(0, 0, 0, 0)'
             //            easing: 'ease-out'
         }
     ], {
@@ -61,71 +62,78 @@ const svgRoute = staff => staff ? `../svg/${staff.route}/${staff.svg}.cropped.sv
 const completed = staff => {
     const staffId = parseInt(staff.getAttribute('staffId'))
 
-    //let currentData = data
-    //pos = currentData.map(e => {
-    pos = data.map(e => {
-        return e.id
-    }).indexOf(staffId); //falla porque no encuentra el Id del ultimo objeto
-    /*
-        console.log("COMPLETED")
-        console.log("staff: ", staff)
-        console.log("currentData: ", currentData)
-        console.log("staffId: ", staffId)
-        console.log("pos: ", pos)
-        console.log("data: ", data)
-    */
-    const transitionEndHandler =
-        (event) => {
-            if (event.propertyName == 'opacity') {
-                console.log("previousState:", staff.getAttribute('state'))
-                stepForward(staff); // 'gone' -> completed() -> 'afterNext' in one step
-                console.log(`opacity transition ended: ${staffId}`)
-                console.log("currentState:", staff.getAttribute('state'))
-                staff.removeEventListener("transitionend", transitionEndHandler)
-            }
-        }
+    try {
 
-    staff.addEventListener("transitionend", transitionEndHandler);
+        pos = data.map(e => {
+            return e.id
+        }).indexOf(staffId); //falla porque no encuentra el Id del ultimo objeto
+
+    } catch (error) {
+
+        if (error instanceof TypeError) {
+            console.error(`${data} is empty. Cannot look for staff to mark as completed`)
+        } else {
+            console.log(error)
+        }
+    }
 
     try {
+        console.log(data)
+        console.log(data[pos])
         data[pos].complete = true
-        //data = JSON.stringify(currentData)
-        //data = currentData;
-        //socket.emit("staff completed", currentData[pos])
         socket.emit("staff completed", data[pos])
 
     } catch (error) {
+
         if (error instanceof TypeError) {
             console.error(`Error: ${staffId} undefined. Cannot mark staff as completed`)
         } else {
             console.log(error)
         }
     }
+
+    const getTransitionEndEventName = () => {
+        var transitions = {
+            "transition": "transitionend",
+            "OTransition": "oTransitionEnd",
+            "MozTransition": "transitionend",
+            "WebkitTransition": "webkitTransitionEnd"
+        }
+        let bodyStyle = document.body.style;
+        for (let transition in transitions) {
+            if (bodyStyle[transition] != undefined) {
+                return transitions[transition];
+            }
+        }
+    }
+
+    const transitionEndHandler =
+        (event) => {
+            if (event.propertyName == 'opacity') {
+                stepForward(staff); // 'gone' -> completed() -> 'afterNext' in one step
+                staff.removeEventListener(getTransitionEndEventName(), transitionEndHandler)
+
+                try {
+                    data.splice(pos, 1) //reminder: data is allStaves, unfiltered
+                } catch (error) {
+                    if (error instanceof TypeError) {
+                        console.error(`${data} is empty. Cannot splice any element`)
+                    } else {
+                        console.log(error)
+                    }
+                }
+
+            }
+        }
+
+    staff.addEventListener(getTransitionEndEventName(), transitionEndHandler);
 }
 
-/*
-function getTransitionEndEventName() {
-  var transitions = {
-      "transition"      : "transitionend",
-      "OTransition"     : "oTransitionEnd",
-      "MozTransition"   : "transitionend",
-      "WebkitTransition": "webkitTransitionEnd"
-   }
-  let bodyStyle = document.body.style;
-  for(let transition in transitions) {
-      if(bodyStyle[transition] != undefined) {
-          return transitions[transition];
-      } 
-  }
-}
 
-let transitionEndEventName = getTransitionEndEventName();
-*/
 
 const state = ["afterNext", "next", "current", "gone"]
 
 const changeState = (staff, newState) => {
-    //const oldState = getOldState(staff.classList) || undefined //reemplazar
     const oldState = staff.getAttribute('state')
     //console.log("change state staff: ", staff)
 
@@ -184,7 +192,7 @@ const setStaffAttrib = (staff, obj) => {
     } else {
         staff.innerHTML = "Esperando partitura..."
         //   staff.data = ""
-        console.log("staff attrib undefined")
+        console.error("staff attributes undefined")
     }
 }
 
