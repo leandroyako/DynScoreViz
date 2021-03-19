@@ -11,13 +11,20 @@ class editorModel {
     }
 
     _createInstrument(instrument) {
-        serverLocalStorage.getItem(instrument) ||
+
+        console.log("createInstrument: ", serverLocalStorage.getItem(instrument))
+
+        if (!serverLocalStorage.getItem(instrument)) {
             serverLocalStorage.setItem(instrument, JSON.stringify([]))
+        } else {
+            console.error(`${instrument} db already exists`)
+        }
     }
 
     _pickParts() {
         serverLocalStorage.getItem('parts') ||
             serverLocalStorage.setItem('parts', JSON.stringify([]));
+
         this.parts = JSON.parse(serverLocalStorage.getItem('parts'))
     }
 
@@ -46,10 +53,11 @@ class editorModel {
             if (err) throw err;
         });
 
-        console.log(`${dir} is deleted!`);
+        console.log(`${dir} dir is deleted!`);
     }
 
     _deleteFile(route) {
+        /* _deleteFile unused, proper method to remove db is .removeItem() */
         const dbPath = `./localStorage/${route}`;
 
         ;
@@ -66,30 +74,34 @@ class editorModel {
     addPart(newPart) {
         this.route = 'parts';
         this._pickParts(); //parse parts JSON
-        this._createDir(newPart.route);
-        this._createInstrument(newPart.route);
 
-        const currentId = this.parts.length > 0 ? this.parts[this.parts.length - 1].id + 1 : 0
-        const part = {
-            id: currentId,
-            route: newPart.route,
-            instrument: newPart.instrument,
-        }
+        console.log("includes part?: ", JSON.stringify(this.parts).includes(newPart.instrument))
 
         if (!JSON.stringify(this.parts).includes(newPart.instrument)) {
+
+            this._createInstrument(newPart.route);
+            this._createDir(newPart.route);
+            const currentId = this.parts.length > 0 ? this.parts[this.parts.length - 1].id + 1 : 0
+
+            const part = {
+                id: currentId,
+                route: newPart.route,
+                instrument: newPart.instrument,
+            }
+
             this.parts.push(part);
             this._commit(this.parts);
             console.log(`New part added: ${newPart.instrument}`);
         } else {
-            console.log(`${newPart.instrument} part already exists`);
+            console.error(`${newPart.instrument} part already exists`);
         }
     }
 
     deletePart(route) {
-        this.route = 'parts'
+        //this.route = 'parts'
         this._pickParts()
         this._deleteDir(route)
-        this._deleteFile(route)
+        serverLocalStorage.removeItem(route)
     }
 
     addStaff(newStaff) {

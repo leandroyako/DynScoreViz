@@ -28,9 +28,9 @@
 
 .grid object {
     height: 47vh;
+    margin: 10vh;
     max-width: 100vh;
     pointer-events: none;
-    transition: opacity 1s ease-in, transform 0.5s ease-in, top 0.5s ease-in;
     position: fixed;
 }
 
@@ -38,28 +38,35 @@
     height: 20vh;
     max-width: 50vh;
     pointer-events: none;
-    transition: opacity 1.5s ease-in, transform 0.5s ease-in, top 0.5s ease-in;
     position: fixed;
 }
 
 .grid .current {
     top: 0vh;
     opacity: 100%;
+    transition: top 0.5s ease-in-out;
 }
 
 .grid .next {
     top: 50vh;
     opacity: 65%;
-    transition: opacity 2s ease-out, transform 0.5s ease-in, top 0.5s ease-in;
+    transition: opacity 1s ease-in, top 0.5s ease-in-out;
 }
 
 .grid .gone {
-    top: 100vh;
-    transition: opacity 1s ease-out, transform 0.5s ease-out, top 0.5s ease-out;
-    animation: gone 1s;
+    top: -50vh;
+    transition: opacity 1s ease-out, top 0.5s ease-in-out;
     opacity: 0;
 }
 
+.grid .afterNext {
+    top: 100vh;
+    transition: opacity 1s ease-in, top 0.5s ease-in-out;
+    /*animation: gone 1s;*/
+    opacity: 0;
+}
+
+/*
 @keyframes gone {
     0% {
         top: 0vh
@@ -73,7 +80,7 @@
         top: 100vh;
     }
 }
-
+*/
 .hidden {
     opacity: 0 !important;
 }

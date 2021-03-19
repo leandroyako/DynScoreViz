@@ -1,5 +1,5 @@
+/*** Socket ***/
 const socket = io();
-
 socket.emit('create', route)
 
 /*** Nav bar ***/
@@ -15,12 +15,8 @@ const metronomeBox = document.querySelector(".metronome");
 
 bpmDisplay.innerHTML = setupBpm || "...";
 
-socket.on('bpm', function(data) {
-    bpmDisplay.innerHTML = data.bpm;
-    //localStorage.currentBpm = data.bpm;
-    //metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1)`;
-    //metronomeBox.style.animation = `blinker ${60/data.bpm}s cubic-bezier(0, 1, 0, 1)`;
-    //console.log(data)
+socket.on('bpm', (data) => {
+    bpmDisplay.innerHTML = data.bpm
 });
 
 socket.on('beat', function(data) {
@@ -42,28 +38,17 @@ socket.on('beat', function(data) {
         iterations: 1
     });
 });
+
 /*** Scores ***/
 const slotOne = document.querySelector(".grid #one");
 const slotTwo = document.querySelector(".grid #two");
 const slotThree = document.querySelector(".grid #three");
 
-/*
-let staves = (staves) => {
-    return JSON.parse(staves);
-};
-*/
-
 let lastStaves = (staves) => {
     const last = staves[staves.length - 1]
     const secondLast = staves[staves.length - 2]
     const thirdLast = staves[staves.length - 3]
-    /* console.log('lastStaves at ws.js')
-     console.log({
-         thirdLast,
-         secondLast,
-         last
-     })
-     */
+
     return {
         thirdLast,
         secondLast,
@@ -76,28 +61,38 @@ const svgRoute = staff => staff ? `../svg/${staff.route}/${staff.svg}.cropped.sv
 const completed = staff => {
     const staffId = parseInt(staff.getAttribute('staffId'))
 
-    /* ERROR
-    'currentData' no incluye el ultimo staff, difiere del JSON con la data del instrumento en el server
-    */
-
-    let currentData = JSON.parse(data)
-
-    pos = currentData.map(e => {
+    //let currentData = data
+    //pos = currentData.map(e => {
+    pos = data.map(e => {
         return e.id
     }).indexOf(staffId); //falla porque no encuentra el Id del ultimo objeto
+    /*
+        console.log("COMPLETED")
+        console.log("staff: ", staff)
+        console.log("currentData: ", currentData)
+        console.log("staffId: ", staffId)
+        console.log("pos: ", pos)
+        console.log("data: ", data)
+    */
+    const transitionEndHandler =
+        (event) => {
+            if (event.propertyName == 'opacity') {
+                console.log("previousState:", staff.getAttribute('state'))
+                stepForward(staff); // 'gone' -> completed() -> 'afterNext' in one step
+                console.log(`opacity transition ended: ${staffId}`)
+                console.log("currentState:", staff.getAttribute('state'))
+                staff.removeEventListener("transitionend", transitionEndHandler)
+            }
+        }
 
-    console.log("COMPLETED")
-    console.log("staff: ", staff)
-    console.log("currentData: ", currentData)
-    console.log("staffId: ", staffId)
-    console.log("pos: ", pos)
-    console.log("data: ", data)
+    staff.addEventListener("transitionend", transitionEndHandler);
 
     try {
-        currentData[pos].complete = true
-        data = JSON.stringify(currentData)
-        socket.emit("staff completed", currentData[pos])
-
+        data[pos].complete = true
+        //data = JSON.stringify(currentData)
+        //data = currentData;
+        //socket.emit("staff completed", currentData[pos])
+        socket.emit("staff completed", data[pos])
 
     } catch (error) {
         if (error instanceof TypeError) {
@@ -106,20 +101,33 @@ const completed = staff => {
             console.log(error)
         }
     }
-    //console.log(currentData)
-    //console.log(staves(data))
 }
 
-const state = ["next", "current", "gone"]
+/*
+function getTransitionEndEventName() {
+  var transitions = {
+      "transition"      : "transitionend",
+      "OTransition"     : "oTransitionEnd",
+      "MozTransition"   : "transitionend",
+      "WebkitTransition": "webkitTransitionEnd"
+   }
+  let bodyStyle = document.body.style;
+  for(let transition in transitions) {
+      if(bodyStyle[transition] != undefined) {
+          return transitions[transition];
+      } 
+  }
+}
+
+let transitionEndEventName = getTransitionEndEventName();
+*/
+
+const state = ["afterNext", "next", "current", "gone"]
 
 const changeState = (staff, newState) => {
     //const oldState = getOldState(staff.classList) || undefined //reemplazar
     const oldState = staff.getAttribute('state')
     //console.log("change state staff: ", staff)
-
-    if (oldState == "gone") {
-        completed(staff)
-    }
 
     const replaceState = () => setTimeout(() => {
         staff.classList.replace(oldState, newState)
@@ -137,33 +145,26 @@ const changeState = (staff, newState) => {
     const staffId = parseInt(staff.getAttribute('staffId'))
     //console.log("change state staffId: ", staffId)
     socket.emit("staff state", route, staffId, newState)
-    /*
+
     if (newState == "gone") {
         completed(staff)
     }
-    */
 }
 
 const gone = staff => {
-    changeState(staff, 'gone')
+    changeState(staff, state[3])
 }
 const current = staff => {
-    changeState(staff, 'current')
+    changeState(staff, state[2])
 }
 const next = staff => {
-    changeState(staff, 'next')
+    changeState(staff, state[1])
 }
-
-const getOldStateClass = staffClassList => {
-    const classList = Array.from(staffClassList)
-    const oldState = classList.filter(
-        stateClass => state.includes(stateClass)
-    ).toString()
-    return oldState
+const afterNext = staff => {
+    changeState(staff, state[0])
 }
 
 const stepForward = staff => {
-    //const oldState = getOldStateClass(staff.classList)
     const oldState = staff.getAttribute('state')
     let index = state.indexOf(oldState)
     let nextIndex = (index + 1) % state.length
@@ -187,79 +188,46 @@ const setStaffAttrib = (staff, obj) => {
     }
 }
 
-const initStaff = allStaves => {
+const placeStaves = allStaves => {
     let staves = filterCompleted(allStaves)
     const last = lastStaves(staves).last || console.log("last empty")
     const secondLast = lastStaves(staves).secondLast || console.log("secondLast empty")
     const thirdLast = lastStaves(staves).thirdLast || console.log("thirdLast empty")
     console.log("filtered staves: ", staves)
-
-    console.log("thirdLast", thirdLast) //undefined
 
     switch (staves.length) {
         case 0:
             slotOne.innerHTML = "Esperando partitura..."
             next(slotOne)
-            gone(slotTwo)
+            afterNext(slotTwo)
             current(slotThree)
-            slotThree.classList.add('hidden')
+            //slotThree.classList.add('hidden')
             break
         case 1:
             setStaffAttrib(slotOne, last)
             next(slotOne)
-            gone(slotTwo)
+            afterNext(slotTwo)
             current(slotThree)
-            slotThree.innerHTML = "Esperando partitura..."
+            //slotThree.classList.add('hidden')
+            //slotThree.innerHTML = "Esperando partitura..."
             break
-            //case 2:
         default:
-            setStaffAttrib(slotOne, secondLast)
-            current(slotOne)
-            setStaffAttrib(slotTwo, last)
-            next(slotTwo)
-            gone(slotThree)
-            break
-            /*
-        default:
+            //slotThree.classList.remove('hidden')
+
             setStaffAttrib(slotOne, thirdLast)
             current(slotOne)
             setStaffAttrib(slotTwo, secondLast)
             next(slotTwo)
-            setStaffAttrib(slotThree, last)
-            gone(slotThree)
+            afterNext(slotThree)
+            setStaffAttrib(slotTwo, last)
             break
-            */
     }
 }
 
-initStaff(JSON.parse(data)); //uses 'data' from request res.render('view_part')
-
-const updateStaff = allStaves => {
-    let staves = filterCompleted(allStaves)
-    const last = lastStaves(staves).last || console.log("last empty")
-    const secondLast = lastStaves(staves).secondLast || console.log("secondLast empty")
-    const thirdLast = lastStaves(staves).thirdLast || console.log("thirdLast empty")
-
-    slotOne.classList.remove('hidden')
-    slotTwo.classList.remove('hidden')
-    slotThree.classList.remove('hidden')
-
-    console.log("filtered staves: ", staves)
-
-    setStaffAttrib(slotOne, thirdLast)
-    current(slotOne)
-    setStaffAttrib(slotTwo, secondLast)
-    next(slotTwo)
-    setStaffAttrib(slotThree, last)
-    gone(slotThree)
-
-    scrollAll()
-}
+placeStaves(data); //uses 'data' from request res.render('view_part')
 
 socket.on('update', staves => {
-    console.log('updateStaff: ', JSON.parse(staves))
-    updateStaff(JSON.parse(staves)) //new data from server sent through socket
-
+    placeStaves(JSON.parse(staves)) //new data from server sent through socket
 });
 
 const scrollAll = () => {
@@ -268,6 +236,6 @@ const scrollAll = () => {
     stepForward(slotThree)
 }
 
-socket.on('scroll', data => {
+socket.on('scroll', () => {
     scrollAll()
 });

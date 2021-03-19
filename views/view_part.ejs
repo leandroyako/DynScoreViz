@@ -10,21 +10,23 @@
     </div>
     <div class="hl"></div>
     <div class="grid">
-        <object id="one" type='image/svg+xml' data="">
+        <object id="one" type='image/svg+xml' data="">Slot 1
             <img src="/svg-no.png" alt="Error loading svg">
         </object>
-        <object id="two" type='image/svg+xml' data="">
+        <object id="two" type='image/svg+xml' data="">Slot 2
             <img src="/svg-no.png" alt="Error loading svg">
         </object>
-        <object id="three" type='image/svg+xml' data="">
+        <object id="three" type='image/svg+xml' data="">Slot 3
             <img src="/svg-no.png" alt="Error loading svg">
         </object>
     </div>
 
     <script>
-        let data = '<%- data%>';
+        let dataString = '<%- data%>';
+        let data = JSON.parse(dataString);
         let route = '<%- route%>';
         let setupBpm = '<%- bpm%>';
+        console.log('script parsedData: ', data)
     </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="../scripts/fullscreen.js"></script>
