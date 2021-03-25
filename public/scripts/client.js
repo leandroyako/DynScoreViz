@@ -214,8 +214,10 @@ const placeStaves = allStaves => {
         case 1:
             setStaffAttrib(slotOne, last)
             next(slotOne)
+
             afterNext(slotTwo)
             current(slotThree)
+
             //slotThree.classList.add('hidden')
             //slotThree.innerHTML = "Esperando partitura..."
             break
@@ -224,10 +226,12 @@ const placeStaves = allStaves => {
 
             setStaffAttrib(slotOne, thirdLast)
             current(slotOne)
+
             setStaffAttrib(slotTwo, secondLast)
             next(slotTwo)
+
+            setStaffAttrib(slotThree, last)
             afterNext(slotThree)
-            setStaffAttrib(slotTwo, last)
             break
     }
 }
@@ -236,6 +240,7 @@ placeStaves(data); //uses 'data' from request res.render('view_part')
 
 socket.on('update', staves => {
     placeStaves(JSON.parse(staves)) //new data from server sent through socket
+    //quizá en lugar de placeStaves tendría que haber algo que lea 'state' de cada objeto para aplicarlo a los slots y solo agregar el siguiente
 });
 
 const scrollAll = () => {
