@@ -64,7 +64,7 @@
     transition: opacity 1s ease-in, top 0.5s ease-in-out;
 }
 
-.grid .gone {
+.grid .complete {
     top: -50vh;
     transition: opacity 1s ease-out, top 0.5s ease-in-out;
     opacity: 0;

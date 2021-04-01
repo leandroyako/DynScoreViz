@@ -1,4 +1,4 @@
-<html lang="en">
+<html>
 <%- include("./partials/head.ejs") %>
 <link rel="stylesheet" href="../css/view_part.css">
 
@@ -12,23 +12,27 @@
     </div>
     <div class="hl"></div>
     <div class="grid">
-        <object id="one" type='image/svg+xml' data="">Slot 1
+        <object class="hidden" data-queue="" data-id="" type='image/svg+xml' data="">
             <img src="/svg-no.png" alt="Error loading svg">
         </object>
-        <object id="two" type='image/svg+xml' data="">Slot 2
+        <object class="hidden" data-queue="" data-id="" type='image/svg+xml' data="">
             <img src="/svg-no.png" alt="Error loading svg">
         </object>
-        <object id="three" type='image/svg+xml' data="">Slot 3
+        <object class="hidden" data-queue="" data-id="" type='image/svg+xml' data="">
+            <img src="/svg-no.png" alt="Error loading svg">
+        </object>
+        <object class="hidden" data-queue="" data-id="" type='image/svg+xml' data="">
             <img src="/svg-no.png" alt="Error loading svg">
         </object>
     </div>
 
     <script>
-        let dataString = '<%- data%>';
-        let data = JSON.parse(dataString);
+        let staves = '<%- staves%>';
+        staves = JSON.parse(staves);
         let route = '<%- route%>';
         let setupBpm = '<%- bpm%>';
-        console.log('script parsedData: ', data)
+        //console.log('script data: ', data)
+        //console.log('script route: ', route)
     </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="../scripts/fullscreen.js"></script>

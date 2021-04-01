@@ -34,11 +34,12 @@ app.use((req, res, next) => {
 
 // routes
 app.get('/', (req, res) => {
-    res.redirect('/interpreter');
+    //    res.redirect('/interpreter');
+    res.redirect('/composer');
 });
 
 // interpreter routes
-app.use('/interpreter', interpreterRoutes);
+//app.use('/interpreter', interpreterRoutes);
 
 // composer routes
 app.use('/composer', composerRoutes);

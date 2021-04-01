@@ -20,18 +20,15 @@ const view_part = (req, res) => {
     const instrument = req.params.instrument
     const route = req.params.route || strip_route_path(instrument)
     const index = parts.findIndex(instrument => instrument.route == route)
-
-    const instrumentRoute = parts[index].route
-    const gapRoute = `${instrumentRoute}_gap`;
-    const gap = serverLocalStorage.getItem(gapRoute);
-    const stored = serverLocalStorage.getItem(instrumentRoute);
-    staves = (JSON.parse(stored).concat(JSON.parse(gap) || [])) || []
-
-    console.log("view_part staves:", staves)
+    const route_stavesConsolidated = `${route}_consolidated`;
+    const stavesConsolidated = serverLocalStorage.getItem(route_stavesConsolidated);
+    const staves = stavesConsolidated || []
+    const bpm = serverLocalStorage.getItem('bpm')
 
     res.render('view_part', {
-        data: staves,
-        route: route
+        staves,
+        route,
+        bpm
     });
 }
 
@@ -46,23 +43,23 @@ const add_part = (req, res) => {
     //res.redirect('/') not working?
 }
 
-const add_part_svg = (req, res, next) => {
+const add_staff = (req, res, next) => {
     const parts = JSON.parse(serverLocalStorage.parts)
     const instrument = req.params.instrument
     const svg = req.params.svg_path
     const route = strip_route_path(instrument)
+
     const staff = {
         instrument,
         route,
         svg,
-        //state: undefined        
     }
 
     editor.addStaff(staff);
-
     const index = parts.findIndex(instrument => instrument.route == route)
-    const staves = serverLocalStorage.getItem(parts[index].route)
-
+    const route_stavesConsolidated = `${parts[index].route}_consolidated`;
+    const stavesConsolidated = serverLocalStorage.getItem(route_stavesConsolidated);
+    const staves = stavesConsolidated || []
     io.to(route).emit('update', staves)
 }
 
@@ -70,48 +67,28 @@ const scroll_part = (req, res) => {
     const instrument = req.params.instrument
     const route = strip_route_path(instrument)
     editor.scroll(route)
-    io.to(route).emit('scroll')
+    const route_stavesConsolidated = `${route}_consolidated`;
+    const stavesConsolidated = serverLocalStorage.getItem(route_stavesConsolidated);
+    const staves = stavesConsolidated || []
+    io.to(route).emit('update', staves)
 }
 
 const delete_part = (req, res) => {
     const route = req.params.route;
-    const stored = serverLocalStorage.getItem('parts');
-    const allParts = JSON.parse(stored);
-    const parts = allParts.filter(part => part.route !== route)
+    let parts = serverLocalStorage.getItem('parts');
+    parts = JSON.parse(parts);
+    parts = parts.filter(part => part.route !== route)
     serverLocalStorage.setItem('parts', JSON.stringify(parts));
     editor.deletePart(route); //delete part folder recursively
     io.to(route).emit("delete currentInstrument")
     res.redirect('/interpreter');
 }
 
-const toggle_staff = (req, res) => {
-    const instrument = req.params.instrument
-    //const route = strip_route(instrument)
-    const id = req.params.id
-    editor.toggleStaff(instrument, id)
-}
-
-/*
-io.on('connection', (client) => {
-    client.on("staff completed", (staff) => {
-        //console.log(staff)
-        editor.toggleStaff(staff.instrument, staff.id)
-    })
-
-    client.on("staff state", (route, staffId, newState) => { //filter by room
-        //console.log()
-        //editor.staffState(staff.instrument, staff.id, staff.state)
-        editor.staffState(route, staffId, newState)
-    })
-});
-*/
-
 module.exports = {
     index,
     view_part,
     add_part,
-    add_part_svg,
+    add_staff,
     scroll_part,
     delete_part,
-    toggle_staff //unused... not sure where to put the request. should be accesible from outside?
 }
