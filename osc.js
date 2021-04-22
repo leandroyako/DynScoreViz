@@ -33,7 +33,7 @@ osc.on('newStaff', message => {
         .request({
                 hostname: "localhost",
                 port: 3000,
-                path: encodeURI(`/composer/add/${message.args[0]}/${message.args[1]}`)
+                path: encodeURI(`/composer/addStaff/${message.args[0]}/${message.args[1]}`)
             },
             res => {
                 let data = ""
@@ -50,11 +50,12 @@ osc.on('newStaff', message => {
 })
 
 osc.on('newPart', message => {
+    //console.log(message)
     http
         .request({
                 hostname: "localhost",
                 port: 3000,
-                path: encodeURI(`/composer/add/${message.args[0]}`)
+                path: encodeURI(`/composer/addPart/${message.args[0]}/${message.args[1]}`)
             },
             res => {
                 let data = ""

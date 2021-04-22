@@ -118,20 +118,20 @@ class editorModel {
 
     addPart(newPart) {
         this._pickParts(); //parse parts JSON
-        if (!JSON.stringify(this.parts).includes(newPart.instrument)) {
+        if (!JSON.stringify(this.parts).includes(newPart.route)) {
             this._createInstrument(newPart.route);
             this._createDir(newPart.route);
             const currentId = this.parts.length > 0 ? this.parts[this.parts.length - 1].id + 1 : 0
             const part = {
                 id: currentId,
                 route: newPart.route,
-                instrument: newPart.instrument,
+                name: newPart.name,
             }
             this.parts.push(part);
             this._commit('parts', this.parts);
-            console.log(`New part added: ${newPart.instrument}`);
+            console.log(`New part added: ${newPart.name}`);
         } else {
-            console.warn(`${newPart.instrument} part already exists`);
+            console.warn(`${newPart.name} part already exists`);
         }
     }
 
@@ -148,14 +148,13 @@ class editorModel {
     }
 
     addStaff(newStaff) {
-        this._pickInstrument(newStaff.instrument);
+        this._pickInstrument(newStaff.route);
         const currentId = this.stavesConsolidated.length > 0 ? this.stavesConsolidated[this.stavesConsolidated.length - 1].id + 1 : 0
         //console.log(currentId)
         const staff = {
             id: currentId,
             svg: newStaff.svg,
             route: newStaff.route,
-            instrument: newStaff.instrument,
             queue: this._getQueuePos()
         }
 
@@ -172,22 +171,22 @@ class editorModel {
 
     // Map through all staves, and replace the content of the staff with the specified id
     editStaff(updatedStaff) {
-        this._pickInstrument(updatedStaff.instrument);
+        this._pickInstrument(updatedStaff.route);
         this._removeById(this.stavesConsolidated, updatedStaff.id)
         //what about this.stavesA and this.stavesB? 
         this._commit(this.stavesConsolidated);
     }
 
     // Filter a staff out of the array by id
-    deleteStaff(instrument, id) {
-        this._pickInstrument(instrument);
+    deleteStaff(route, id) {
+        this._pickInstrument(route);
         const staves = this.stavesConsolidated.filter(staff => staff.id !== id);
         this._commit(this.route_stavesConsolidated, staves);
         this.onStaffListChanged(staves);
     }
 
-    scroll(instrument) {
-        this._pickInstrument(instrument);
+    scroll(route) {
+        this._pickInstrument(route);
         let lastPos;
 
         try {

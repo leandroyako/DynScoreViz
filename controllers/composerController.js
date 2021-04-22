@@ -33,10 +33,10 @@ const view_part = (req, res) => {
 }
 
 const add_part = (req, res) => {
-    const instrument = req.params.instrument
-    const route = strip_route_path(instrument)
+    const name = req.params.name
+    const route = strip_route_path(req.params.route)
     const part = {
-        instrument,
+        name,
         route
     }
     editor.addPart(part)
@@ -45,18 +45,16 @@ const add_part = (req, res) => {
 
 const add_staff = (req, res, next) => {
     const parts = JSON.parse(serverLocalStorage.parts)
-    const instrument = req.params.instrument
     const svg = req.params.svg_path
-    const route = strip_route_path(instrument)
+    const route = strip_route_path(req.params.route)
 
     const staff = {
-        instrument,
         route,
         svg,
     }
 
     editor.addStaff(staff);
-    const index = parts.findIndex(instrument => instrument.route == route)
+    const index = parts.findIndex(part => part.route == route)
     const route_stavesConsolidated = `${parts[index].route}_consolidated`;
     const stavesConsolidated = serverLocalStorage.getItem(route_stavesConsolidated);
     const staves = stavesConsolidated || []
@@ -64,8 +62,7 @@ const add_staff = (req, res, next) => {
 }
 
 const scroll_part = (req, res) => {
-    const instrument = req.params.instrument
-    const route = strip_route_path(instrument)
+    const route = req.params.route
     editor.scroll(route)
     const route_stavesConsolidated = `${route}_consolidated`;
     const stavesConsolidated = serverLocalStorage.getItem(route_stavesConsolidated);
@@ -81,7 +78,7 @@ const delete_part = (req, res) => {
     serverLocalStorage.setItem('parts', JSON.stringify(parts));
     editor.deletePart(route); //delete part folder recursively
     io.to(route).emit("delete currentInstrument")
-    res.redirect('/interpreter');
+    res.redirect('/composer');
 }
 
 module.exports = {

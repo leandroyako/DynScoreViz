@@ -8,7 +8,7 @@
         <% if (data.length > 0) { %>
         <% data.forEach(part => { %>
         <a class="single" href="/composer/<%= part.route %>" onclick="storeCurrentInstrument('<%= part.route %>')">
-            <h3 class="title"><%= part.instrument %></h3>
+            <h3 class="title"><%= part.name %></h3>
             <p class="snippet"><%= part.route %></p>
         </a>
         <% }) %>
