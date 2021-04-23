@@ -16,11 +16,11 @@ $ npm install
 Run server
 
 ```
-node app
-
-
-Open http://localhost:3000/ in browser
+$node app
 ```
+
+Open `http://localhost:3000/` in browser
+
 
 ## Contributing
 
