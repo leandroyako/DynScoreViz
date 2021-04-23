@@ -1,4 +1,9 @@
 const http = require("http")
+
+var iface = 'wlp3s0';
+var localip = require('local-ip')(iface);
+//console.log('My local ip address on ' + iface + ' is ' + localip);
+
 //OSC
 const OSC = require('osc-js');
 const editor = require('./controllers/composerController.js').editor;
@@ -23,7 +28,7 @@ const osc = new OSC({
 osc.open()
 
 osc.on('open', () => {
-    const message = new OSC.Message('/status', 'LivecodeScores connected')
+    const message = new OSC.Message('/status', 'LivecodeScores server on ' + localip)
     osc.send(message)
 })
 
