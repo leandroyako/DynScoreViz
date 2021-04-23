@@ -1,6 +1,7 @@
 # Live Code Scores
 
-**(work in progress)** Music score visualization module to be used with FoscPbind quark https://github.com/leandroyako/FoscPbind
+**(work in progress)** 
+Music score visualization module to be used with FoscPbind quark https://github.com/leandroyako/FoscPbind
 
 ## Requirements
 * Node.js
@@ -9,16 +10,17 @@ Clone this repository and install dependencies
 $ git clone https://github.com/leandroyako/livecode-scores
 $ cd livecode-scores
 $ npm install
-`
+```
 ## Usage
 
 Run server
 
 ```
 node app
-```
+
 
 Open http://localhost:3000/ in browser
+```
 
 ## Contributing
 
