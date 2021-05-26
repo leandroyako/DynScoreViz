@@ -100,7 +100,7 @@ class editorModel {
         try {
             this.gap ? lastPos = this.stavesB[this.stavesB.length - 1].queue : lastPos = this.stavesConsolidated[this.stavesConsolidated.length - 1].queue
         } catch (error) {
-            console.log(error)
+            //console.log(error)
             return 2
         }
 
@@ -150,13 +150,15 @@ class editorModel {
     addStaff(newStaff) {
         this._pickInstrument(newStaff.route);
         const currentId = this.stavesConsolidated.length > 0 ? this.stavesConsolidated[this.stavesConsolidated.length - 1].id + 1 : 0
-        //console.log(currentId)
+
         const staff = {
             id: currentId,
             svg: newStaff.svg,
             route: newStaff.route,
             queue: this._getQueuePos()
         }
+
+        //        console.log(staff)
 
         if (this.gap) {
             this.stavesB.push(staff)
@@ -167,6 +169,8 @@ class editorModel {
         }
         this.stavesConsolidated = this.stavesA.concat(this.stavesB)
         this._commit(this.route_stavesConsolidated, this.stavesConsolidated)
+
+        //        console.log(this.route_stavesConsolidated)
     }
 
     // Map through all staves, and replace the content of the staff with the specified id

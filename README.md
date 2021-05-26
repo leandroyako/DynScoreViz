@@ -1,7 +1,7 @@
 # DynScoreViz
 
 **(work in progress)** 
-Music score visualization module to be used with FoscPbind quark https://github.com/leandroyako/DynScorePat
+Music score visualization module to be used with DynScorePat quark https://github.com/leandroyako/DynScorePat
 
 ## Requirements
 * Node.js

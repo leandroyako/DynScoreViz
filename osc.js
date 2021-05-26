@@ -33,7 +33,6 @@ osc.on('open', () => {
 })
 
 osc.on('newStaff', message => {
-    //console.log(message);
     http
         .request({
                 hostname: "localhost",
@@ -55,7 +54,6 @@ osc.on('newStaff', message => {
 })
 
 osc.on('newPart', message => {
-    //console.log(message)
     http
         .request({
                 hostname: "localhost",
