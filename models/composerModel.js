@@ -158,8 +158,6 @@ class editorModel {
             queue: this._getQueuePos()
         }
 
-        //        console.log(staff)
-
         if (this.gap) {
             this.stavesB.push(staff)
             this._commit(this.route_stavesB, this.stavesB)
@@ -169,8 +167,6 @@ class editorModel {
         }
         this.stavesConsolidated = this.stavesA.concat(this.stavesB)
         this._commit(this.route_stavesConsolidated, this.stavesConsolidated)
-
-        //        console.log(this.route_stavesConsolidated)
     }
 
     // Map through all staves, and replace the content of the staff with the specified id
