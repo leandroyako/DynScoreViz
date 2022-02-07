@@ -6,7 +6,7 @@ var localip = require('local-ip')(iface);
 
 //OSC
 const OSC = require('osc-js');
-const editor = require('./controllers/composerController.js').editor;
+const editor = require('./controllers/composer.js').editor;
 
 const options = {
     type: 'udp4', // @param {string} 'udp4' or 'udp6'

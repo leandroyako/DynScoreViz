@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<%- include("./partials/head.ejs") %>
+<script type="module" src="../scripts/settings.js"></script>
+<link rel="stylesheet" href="../css/settings.css">
+
+<body>
+    <%- include("./partials/nav.ejs") %>
+
+    <main>
+        <form>
+            <section>
+                <header>
+                    <h2>Configuración</h2>
+                    <small><%= role %></small>
+                </header>
+
+                <fieldset>
+
+                    <div class="fieldset-item">
+                        <input type="checkbox" checked id="metronome" name="metronome">
+                        <div class="input-stack">
+                            <label for="metronome">
+                                <h3>Metrónomo</h3>
+                                <small>Habilitar visualización</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="fieldset-item">
+                        <input type="checkbox" id="option2" name="option2">
+                        <div class="input-stack">
+                            <label for="option2">
+                                <h3>Opción 2</h3>
+                                <small>Habilitar la opción 2</small>
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </section>
+
+        </form>
+    </main>
+</body>
+<script>
+
+</script>
+
+</html>

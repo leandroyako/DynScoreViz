@@ -1,6 +1,7 @@
 const Editor = require('../models/composerModel');
 const editor = new Editor();
 const io = require('../ioInstance').get();
+const role = 'composer'
 
 const strip_route_path = (string) => {
     return string.replace(/ /g, '').toLowerCase()
@@ -9,7 +10,6 @@ const strip_route_path = (string) => {
 const index = (req, res) => {
     serverLocalStorage.getItem('parts') || serverLocalStorage.setItem('parts', JSON.stringify([]))
     const parts = JSON.parse(serverLocalStorage.getItem('parts'))
-    const role = 'composer'
     res.render('index', {
         parts,
         role: role,
@@ -26,12 +26,30 @@ const view_part = (req, res) => {
     const stavesConsolidated = serverLocalStorage.getItem(route_stavesConsolidated);
     const staves = stavesConsolidated || []
     const bpm = serverLocalStorage.getItem('bpm')
-    const role = 'composer'
 
     res.render('view_part', {
         staves,
         route,
         bpm,
+        role
+    });
+}
+
+const settings = (req, res) => {
+    let settings
+    try {
+        settings = serverLocalStorage.getItem('settings')
+    } catch {
+        console.log("Error loading settings")
+    }
+    try {
+        settings = JSON.parse(settings)
+    } catch {
+        console.log("Error parsing settings")
+    }
+
+    res.render('settings', {
+        settings,
         role
     });
 }
@@ -92,4 +110,5 @@ module.exports = {
     add_staff,
     scroll_part,
     delete_part,
+    settings,
 }

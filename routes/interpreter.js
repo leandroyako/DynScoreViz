@@ -1,7 +1,8 @@
 const router = require('express').Router()
-const interpreterController = require('../controllers/interpreterController');
+const controller = require('../controllers/interpreter');
 
-router.get('/', interpreterController.index);
-router.get('/:route', interpreterController.view_part);
+router.get('/', controller.index);
+router.get('/settings', controller.settings);
+router.get('/:route', controller.view_part);
 
 module.exports = router
