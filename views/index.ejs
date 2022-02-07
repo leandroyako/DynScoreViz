@@ -4,11 +4,11 @@
 
 <body>
     <%- include("./partials/nav.ejs") %>
-
+    <p><%= role %></p>
     <div class="content">
-        <% if (data.length > 0) { %>
-        <% data.forEach(part => { %>
-        <a class="single" href="/composer/<%= part.route %>" onclick="storeCurrentInstrument('<%= part.route %>')">
+        <% if (parts.length > 0) { %>
+        <% parts.forEach(part => { %>
+        <a class="single" href="/<%= role %>/<%= part.route %>" onclick="storeCurrentInstrument('<%= part.route %>')">
             <h3 class="title"><%= part.name %></h3>
             <!-- <p class="snippet"><%= part.route %></p> -->
         </a>

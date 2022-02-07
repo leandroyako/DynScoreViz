@@ -9,8 +9,10 @@ const strip_route_path = (string) => {
 const index = (req, res) => {
     serverLocalStorage.getItem('parts') || serverLocalStorage.setItem('parts', JSON.stringify([]))
     const parts = JSON.parse(serverLocalStorage.getItem('parts'))
+    const role = 'composer'
     res.render('index', {
-        data: parts,
+        parts,
+        role: role,
         title: 'Elegir Instrumento'
     });
 }
@@ -24,11 +26,13 @@ const view_part = (req, res) => {
     const stavesConsolidated = serverLocalStorage.getItem(route_stavesConsolidated);
     const staves = stavesConsolidated || []
     const bpm = serverLocalStorage.getItem('bpm')
+    const role = 'composer'
 
     res.render('view_part', {
         staves,
         route,
-        bpm
+        bpm,
+        role
     });
 }
 

@@ -5,8 +5,8 @@
     <%- include("./partials/nav.ejs") %>
 
     <div class="content">
-        <% if (data.length > 0) { %>
-        <% data.forEach(instrument => { %>
+        <% if (parts.length > 0) { %>
+        <% parts.forEach(instrument => { %>
         <a class="single" href="/composer/<%= instrument.route %>">
             <h3 class="title"><%= instrument.name %></h3>
             <p class="snippet"><%= instrument.route %></p>

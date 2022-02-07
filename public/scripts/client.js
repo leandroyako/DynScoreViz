@@ -1,13 +1,13 @@
 /*** Socket ***/
-const socket = io();
+const socket = io()
 socket.emit('create', route)
 
 /*** Nav bar ***/
 socket.on("delete currentInstrument", () => {
     delete localStorage.currentInstrument;
-    document.getElementById("partitura").href = "";
+    // document.getElementById("partitura").href = "";
 })
-document.getElementById("partitura").href = `/composer/${localStorage.currentInstrument}`;
+// document.getElementById("partitura").href = `/<%= route %>/${localStorage.currentInstrument}`;
 
 /*** Metronome ***/
 const bpmDisplay = document.querySelector(".metronome .bpm");

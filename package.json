@@ -1,33 +1,33 @@
 {
-  "name": "livecode-scores",
-  "version": "1.0.0",
-  "description": "livecode musical scores with SuperCollider and Lilypond",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/leandroyako/livecodeScores.git"
-  },
-  "author": "leandro yako",
-  "license": "GPL 3.0",
-  "bugs": {
-    "url": "https://github.com/leandroyako/livecodeScores/issues"
-  },
-  "homepage": "https://github.com/leandroyako/livecodeScores#readme",
-  "dependencies": {
-    "abletonlink": "^0.1.1",
-    "ejs": "^3.1.6",
-    "express": "^4.17.1",
-    "local-ip": "^2.0.0",
-    "lodash": "^4.17.21",
-    "morgan": "^1.10.0",
-    "socket.io": "^3.1.2"
-  },
-  "devDependencies": {
-    "node-localstorage": "^2.1.6",
-    "osc-js": "^2.1.2",
-    "supertest": "^6.1.3"
-  }
+    "name": "DynScore",
+    "version": "1.0.0",
+    "description": "livecode musical scores with SuperCollider and Lilypond",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/leandroyako/DynScore.git"
+    },
+    "author": "leandro yako",
+    "license": "GPL 3.0",
+    "bugs": {
+        "url": "https://github.com/leandroyako/DynScore/issues"
+    },
+    "homepage": "https://github.com/leandroyako/DynScore#readme",
+    "dependencies": {
+        "abletonlink": "^0.1.1",
+        "ejs": "^3.1.6",
+        "express": "^4.17.1",
+        "local-ip": "^2.0.0",
+        "lodash": "^4.17.21",
+        "morgan": "^1.10.0",
+        "socket.io": "^4.4.1"
+    },
+    "devDependencies": {
+        "node-localstorage": "^2.1.6",
+        "osc-js": "^2.1.2",
+        "supertest": "^6.1.3"
+    }
 }

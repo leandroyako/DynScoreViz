@@ -1,9 +1,7 @@
-const express = require('express');
+const router = require('express').Router()
 const interpreterController = require('../controllers/interpreterController');
-
-const router = express.Router();
 
 router.get('/', interpreterController.index);
 router.get('/:route', interpreterController.view_part);
 
-module.exports = router;
+module.exports = router
