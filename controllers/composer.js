@@ -36,6 +36,10 @@ const view_part = (req, res) => {
 }
 
 const settings = (req, res) => {
+    var iface = 'wlp3s0'; //hardcoded
+    var localip = require('local-ip')(iface);
+    console.log('My local ip address on ' + iface + ' is ' + localip);
+
     let settings
     try {
         settings = serverLocalStorage.getItem('settings')
@@ -50,7 +54,8 @@ const settings = (req, res) => {
 
     res.render('settings', {
         settings,
-        role
+        role,
+        localip
     });
 }
 

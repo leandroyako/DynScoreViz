@@ -8,6 +8,17 @@
     <%- include("./partials/nav.ejs") %>
 
     <main>
+        <% if (role == 'composer') { %>
+        <header>
+            <h2>Información útil</h2>
+            <dl>
+                <dt>IP:</dt>
+                <% if (localip) { %>
+                <dd><% localip %></dd>
+                <% } %>
+            </dl>
+        </header>
+        <% } %>
         <form>
             <section>
                 <header>
@@ -26,16 +37,28 @@
                             </label>
                         </div>
                     </div>
-
+                    <% if (role == 'composer') { %>
                     <div class="fieldset-item">
-                        <input type="checkbox" id="option2" name="option2">
+                        <input type="checkbox" id="composer-option2" name="composer-option2">
                         <div class="input-stack">
-                            <label for="option2">
-                                <h3>Opción 2</h3>
+                            <label for="composer-option2">
+                                <h3>Vista de compositor - Opción 2</h3>
                                 <small>Habilitar la opción 2</small>
                             </label>
                         </div>
                     </div>
+                    <% } %>
+                    <% if (role == 'interpreter') { %>
+                    <div class="fieldset-item">
+                        <input type="checkbox" id="interpreter-option2" name="interpreter-option2">
+                        <div class="input-stack">
+                            <label for="interpreter-option2">
+                                <h3>Vista de interprete - Opción 2</h3>
+                                <small>Habilitar la opción 2</small>
+                            </label>
+                        </div>
+                    </div>
+                    <% } %>
                 </fieldset>
             </section>
 
