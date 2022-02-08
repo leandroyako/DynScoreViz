@@ -51,8 +51,20 @@ const metronomeListeners = (active) => {
     }
 }
 
-metronomeListeners(true)
-showMetronome(true)
+//Init settings
+const data = JSON.parse(localStorage.getItem("settings"))
+
+for (var prop in data) {
+    if (prop == "metronome") {
+        if (data[prop] === 'on') { //https://stackoverflow.com/questions/263965/how-can-i-convert-a-string-to-boolean-in-javascript/264037#264037
+            metronomeListeners(true)
+            showMetronome(true)
+        } else {
+            metronomeListeners(false)
+            showMetronome(false)
+        }
+    }
+}
 
 
 /*** Scores ***/
@@ -79,7 +91,7 @@ const setNewPosition = (currentStaff, newStaff) => {
         currentStaff.classList.add(newClass)
     }
     currentStaff.dataset.queue = newStaff.queue
-    console.log("newStaff positoned", currentStaff)
+    //console.log("newStaff positoned", currentStaff)
 }
 
 const queueWithinDisplayInterval = (staves) => {

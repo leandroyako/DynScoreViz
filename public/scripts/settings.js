@@ -81,7 +81,6 @@ form.addEventListener('input', e => {
 
     localStorage.setItem("settings", JSON.stringify(data))
 
-
     for (var prop in data) {
         console.log("Key:" + prop);
         console.log("Value:" + data[prop]);

@@ -1,9 +1,13 @@
 <nav class="hide">
     <ul>
         <li><a href="/<%= role %>">Elegir instrumento</a></li>
-        <li><a href="#" id="score">Partitura</a></li>
+        <li><a href="#" id="scoreBtn">Partitura</a></li>
         <a href="#">
             <li class="modal-open" data-id="settings-modal">Configuración</li>
         </a>
     </ul>
 </nav>
+<script>
+    const scoreBtn = document.querySelector('#scoreBtn')
+    scoreBtn.href = `/<%= role %>/${localStorage.currentInstrument}`
+</script>
