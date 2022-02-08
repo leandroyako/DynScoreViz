@@ -52,17 +52,50 @@ sliders.forEach(slider => {
     })
 })
 
-let settingsState = {}
-
 form.addEventListener('input', e => {
-    const formData = Object.fromEntries(new FormData(form))
-    //console.table(formData)
+    const formData = new FormData(form)
 
-    settingsState = JSON.stringify(formData)
-    localStorage.setItem("settings", settingsState)
+    let data = {}
 
-    for (var prop in formData) {
+    formData.forEach((value, key) => {
+        // Reflect.has in favor of: object.hasOwnProperty(key)
+        if (!Reflect.has(data, key)) {
+            data[key] = value;
+            return;
+        }
+        if (!Array.isArray(data[key])) {
+            data[key] = [data[key]];
+        }
+        data[key].push(value)
+    })
+
+    //fix for retrieveng unchecked checkboxes
+    let checkboxes = document.querySelectorAll('input[type="checkbox"]')
+    checkboxes.forEach((checkbox) => {
+        if (!checkbox.checked) {
+            data[checkbox.name] = "off"
+        }
+    })
+
+    console.table(data)
+
+    localStorage.setItem("settings", JSON.stringify(data))
+
+
+    for (var prop in data) {
         console.log("Key:" + prop);
-        console.log("Value:" + formData[prop]);
+        console.log("Value:" + data[prop]);
+        if (prop == "metronome") {
+            if (data[prop] === 'on') { //https://stackoverflow.com/questions/263965/how-can-i-convert-a-string-to-boolean-in-javascript/264037#264037
+                metronomeListeners(true)
+                showMetronome(true)
+                console.log("Metronome on")
+            } else {
+                metronomeListeners(false)
+                showMetronome(false)
+                console.log("Metronome off")
+            }
+        }
     }
+
 })
