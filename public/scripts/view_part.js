@@ -53,10 +53,9 @@ const metronomeListeners = (active) => {
 
 //Init settings
 const data = JSON.parse(localStorage.getItem("settings"))
-
 for (var prop in data) {
     if (prop == "metronome") {
-        if (data[prop] === 'on') { //https://stackoverflow.com/questions/263965/how-can-i-convert-a-string-to-boolean-in-javascript/264037#264037
+        if (data[prop] === 'on') {
             metronomeListeners(true)
             showMetronome(true)
         } else {

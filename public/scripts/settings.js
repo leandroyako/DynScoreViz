@@ -54,7 +54,6 @@ sliders.forEach(slider => {
 
 form.addEventListener('input', e => {
     const formData = new FormData(form)
-
     let data = {}
 
     formData.forEach((value, key) => {
@@ -78,23 +77,39 @@ form.addEventListener('input', e => {
     })
 
     console.table(data)
-
     localStorage.setItem("settings", JSON.stringify(data))
 
     for (var prop in data) {
-        console.log("Key:" + prop);
-        console.log("Value:" + data[prop]);
+
         if (prop == "metronome") {
             if (data[prop] === 'on') { //https://stackoverflow.com/questions/263965/how-can-i-convert-a-string-to-boolean-in-javascript/264037#264037
-                metronomeListeners(true)
-                showMetronome(true)
-                console.log("Metronome on")
+                try {
+                    metronomeListeners(true)
+                    showMetronome(true)
+                    //console.log("Metronome on")
+                } catch {}
+
             } else {
-                metronomeListeners(false)
-                showMetronome(false)
-                console.log("Metronome off")
+                try {
+                    metronomeListeners(false)
+                    showMetronome(false)
+                    //console.log("Metronome off")}
+                } catch {}
             }
         }
     }
-
 })
+
+//init settings
+const savedData = JSON.parse(localStorage.getItem("settings"))
+
+for (var prop in savedData) {
+    console.log(prop)
+    const currentValue = savedData[prop] == "on" ? true : false
+    console.log(currentValue)
+    try {
+        document.querySelector(`input[name=${prop}]`).checked = currentValue
+    } catch {
+        console.log(`Error restoring checkbox state for ${prop}`)
+    }
+}
