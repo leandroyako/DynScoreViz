@@ -4,6 +4,7 @@
 
 <body>
     <%- include("./partials/nav.ejs") %>
+    <%- include("./partials/settings.ejs") %>
     <div class="content">
         <% if (parts.length > 0) { %>
         <% parts.forEach(part => { %>
@@ -16,9 +17,10 @@
         <p>No hay instrumentos para mostrar...</p>
         <% } %>
     </div>
+    <script>
+        const storeCurrentInstrument = (route) => localStorage.currentInstrument = route;
+    </script>
+    <%- include("./partials/footer.ejs") %>
 </body>
-<script>
-    const storeCurrentInstrument = (route) => localStorage.currentInstrument = route;
-</script>
 
 </html>

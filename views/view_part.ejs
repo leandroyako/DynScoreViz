@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
 <%- include("./partials/head.ejs") %>
-<link rel="stylesheet" href="../css/view_part.css">
 
 <body>
-
     <%- include("./partials/nav.ejs") %>
+    <%- include("./partials/settings.ejs") %>
     <div class="metronome">
         <div id="circle" class="bpm">
             <%= bpm %>
@@ -38,6 +37,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="../scripts/fullscreen.js"></script>
     <script src="../scripts/client.js"></script>
+
+    <%- include("./partials/footer.ejs") %>
 </body>
 
 </html>

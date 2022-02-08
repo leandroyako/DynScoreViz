@@ -13,9 +13,7 @@
             <h2>Información útil</h2>
             <dl>
                 <dt>IP:</dt>
-                <% if (localip) { %>
-                <dd><% localip %></dd>
-                <% } %>
+                <dd><%- localip %></dd>
             </dl>
         </header>
         <% } %>
@@ -23,7 +21,6 @@
             <section>
                 <header>
                     <h2>Configuración</h2>
-                    <small><%= role %></small>
                 </header>
 
                 <fieldset>

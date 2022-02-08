@@ -4,35 +4,56 @@ socket.emit('create', route)
 
 /*** Nav bar ***/
 socket.on("delete currentInstrument", () => {
-    delete localStorage.currentInstrument;
+    delete localStorage.currentInstrument
 })
 
 /*** Metronome ***/
-const bpmDisplay = document.querySelector(".metronome .bpm");
-//const metronomeBox = document.querySelector(".metronome");
-const metronomeBox = document.querySelector(".metronome #circle");
-bpmDisplay.innerHTML = setupBpm || "...";
+const bpmDisplay = document.querySelector(".metronome .bpm")
+const metronomeBox = document.querySelector(".metronome #circle")
+bpmDisplay.innerHTML = setupBpm || "..."
 
-socket.on('bpm', (data) => {
-    bpmDisplay.innerHTML = data.bpm
-});
-
-socket.on('beat', (data) => {
-    const bpm = parseFloat(data.bpm);
-    metronomeBox.animate([
-        // keyframes
-        {
-            background: 'rgba(0, 0, 0, 0.5)'
-        },
-        {
-            background: 'rgba(0, 0, 0, 0)'
+const showMetronome = (enable) => {
+    const metronomeDiv = document.querySelector(".metronome")
+    if (enable) {
+        if (metronomeDiv.classList.contains('hidden')) {
+            metronomeDiv.classList.remove('hidden')
         }
-    ], {
-        // timing options
-        duration: 60 / bpm * 1000,
-        iterations: 1
-    });
-});
+    } else {
+        metronomeDiv.classList.add('hidden')
+    }
+}
+
+const metronomeListeners = (active) => {
+    if (active) {
+        socket.on('bpm', (data) => {
+            bpmDisplay.innerHTML = data.bpm
+        });
+
+        socket.on('beat', (data) => {
+            const bpm = parseFloat(data.bpm);
+            metronomeBox.animate([
+                // keyframes
+                {
+                    background: 'rgba(0, 0, 0, 0.5)'
+                },
+                {
+                    background: 'rgba(0, 0, 0, 0)'
+                }
+            ], {
+                // timing options
+                duration: 60 / bpm * 1000,
+                iterations: 1
+            })
+        })
+    } else {
+        socket.removeAllListeners('bpm')
+        socket.removeAllListeners('beat')
+    }
+}
+
+metronomeListeners(true)
+showMetronome(true)
+
 
 /*** Scores ***/
 const slots = () => {

@@ -2,6 +2,8 @@ const Editor = require('../models/composerModel');
 const editor = new Editor();
 const io = require('../ioInstance').get();
 const role = 'composer'
+const iface = 'wlp3s0'; //hardcoded
+const localip = require('local-ip')(iface);
 
 const strip_route_path = (string) => {
     return string.replace(/ /g, '').toLowerCase()
@@ -12,7 +14,8 @@ const index = (req, res) => {
     const parts = JSON.parse(serverLocalStorage.getItem('parts'))
     res.render('index', {
         parts,
-        role: role,
+        role,
+        localip,
         title: 'Elegir Instrumento'
     });
 }
@@ -31,13 +34,14 @@ const view_part = (req, res) => {
         staves,
         route,
         bpm,
-        role
+        role,
+        localip
     });
 }
 
+/*
 const settings = (req, res) => {
-    var iface = 'wlp3s0'; //hardcoded
-    var localip = require('local-ip')(iface);
+   
     console.log('My local ip address on ' + iface + ' is ' + localip);
 
     let settings
@@ -58,6 +62,7 @@ const settings = (req, res) => {
         localip
     });
 }
+*/
 
 const add_part = (req, res) => {
     const name = req.params.name
@@ -115,5 +120,5 @@ module.exports = {
     add_staff,
     scroll_part,
     delete_part,
-    settings,
+    //    settings,
 }
