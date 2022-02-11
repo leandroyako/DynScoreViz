@@ -1,4 +1,7 @@
-const http = require("http")
+const http = require("http");
+const {
+    builtinModules
+} = require("module");
 
 var iface = 'wlp3s0';
 var localip = require('local-ip')(iface);
@@ -28,7 +31,7 @@ const osc = new OSC({
 osc.open()
 
 osc.on('open', () => {
-    const message = new OSC.Message('/status', 'DynScore server on ' + localip)
+    const message = new OSC.Message('/dynscore/status', 'DynScore server on ' + localip)
     osc.send(message)
 })
 
@@ -140,7 +143,6 @@ osc.on('deletePart', message => {
 })
 
 osc.on('scroll', message => {
-    console.log(message)
     http
         .request({
                 hostname: "localhost",
@@ -162,7 +164,6 @@ osc.on('scroll', message => {
 })
 
 osc.on('scrollNextBeats', message => {
-    console.log(message)
     http
         .request({
                 hostname: "localhost",
@@ -182,3 +183,7 @@ osc.on('scrollNextBeats', message => {
         )
         .end()
 })
+
+module.exports = {
+    osc
+}
