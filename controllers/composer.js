@@ -102,6 +102,12 @@ const scroll_part = (req, res) => {
     io.to(route).emit('update', staves)
 }
 
+const scroll_next_beats = (req, res) => {
+    const route = req.params.route
+    const beats = req.params.beats
+    io.to(route).emit("scroll next beats", route, beats)
+}
+
 const delete_part = (req, res) => {
     const route = req.params.route;
     let parts = serverLocalStorage.getItem('parts');
@@ -124,12 +130,14 @@ const clear_preview = (req, res) => {
     io.to(route).emit("clear preview", route)
 }
 
+
 module.exports = {
     index,
     view_part,
     add_part,
     add_staff,
     scroll_part,
+    scroll_next_beats,
     delete_part,
     preview_staff,
     clear_preview

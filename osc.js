@@ -140,11 +140,34 @@ osc.on('deletePart', message => {
 })
 
 osc.on('scroll', message => {
+    console.log(message)
     http
         .request({
                 hostname: "localhost",
                 port: 3000,
                 path: encodeURI(`/composer/scroll/${message.args[0]}`)
+            },
+            res => {
+                let data = ""
+
+                res.on("data", d => {
+                    data += d
+                })
+                res.on("end", () => {
+                    data
+                })
+            }
+        )
+        .end()
+})
+
+osc.on('scrollNextBeats', message => {
+    console.log(message)
+    http
+        .request({
+                hostname: "localhost",
+                port: 3000,
+                path: encodeURI(`/composer/scroll/${message.args[0]}/${message.args[1]}`)
             },
             res => {
                 let data = ""
