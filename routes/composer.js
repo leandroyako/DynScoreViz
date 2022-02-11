@@ -8,5 +8,7 @@ router.get('/addPart/:route/:name', controller.add_part)
 router.get('/addStaff/:route/:svg_path', controller.add_staff)
 router.get('/scroll/:route', controller.scroll_part)
 router.get('/delete/:route', controller.delete_part)
+router.get('/previewStaff/:route/:svg_path', controller.preview_staff)
+router.get('/clearPreview/:route', controller.clear_preview)
 
 module.exports = router

@@ -113,6 +113,17 @@ const delete_part = (req, res) => {
     res.redirect('/composer');
 }
 
+const preview_staff = (req, res) => {
+    const route = req.params.route
+    const svg = req.params.svg_path
+    io.to(route).emit("preview staff", route, svg)
+}
+
+const clear_preview = (req, res) => {
+    const route = req.params.route;
+    io.to(route).emit("clear preview", route)
+}
+
 module.exports = {
     index,
     view_part,
@@ -120,5 +131,6 @@ module.exports = {
     add_staff,
     scroll_part,
     delete_part,
-    //    settings,
+    preview_staff,
+    clear_preview
 }

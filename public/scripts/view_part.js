@@ -51,7 +51,7 @@ const metronomeListeners = (active) => {
     }
 }
 
-//Init settings
+/*** Init settings ***/
 const data = JSON.parse(localStorage.getItem("settings"))
 for (var prop in data) {
     if (prop == "metronome") {
@@ -148,4 +148,7 @@ updateStaves(staves) //data sent through view_part.render
 socket.on('update', (staves) => {
     staves = JSON.parse(staves)
     updateStaves(staves) //new data from server sent through socket
+    if (modal.getAttribute('open')) {
+        closeModal(modal)
+    }
 })

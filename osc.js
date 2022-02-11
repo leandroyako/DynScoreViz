@@ -53,6 +53,50 @@ osc.on('newStaff', message => {
         .end();
 })
 
+osc.on('previewStaff', message => {
+    http
+        .request({
+                hostname: "localhost",
+                port: 3000,
+                path: encodeURI(`/composer/previewStaff/${message.args[0]}/${message.args[1]}`)
+                //this.instrumentPath, currentOutputFileName);
+            },
+            res => {
+                let data = ""
+
+                res.on("data", d => {
+                    data += d
+                })
+                res.on("end", () => {
+                    data
+                })
+            }
+        )
+        .end();
+})
+
+osc.on('clearPreview', message => {
+    http
+        .request({
+                hostname: "localhost",
+                port: 3000,
+                path: encodeURI(`/composer/clearPreview/${message.args[0]}`)
+                //this.instrumentPath;
+            },
+            res => {
+                let data = ""
+
+                res.on("data", d => {
+                    data += d
+                })
+                res.on("end", () => {
+                    data
+                })
+            }
+        )
+        .end();
+})
+
 osc.on('newPart', message => {
     http
         .request({
