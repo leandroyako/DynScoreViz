@@ -1,5 +1,5 @@
 // Ableton Link
-module.exports = io => {
+module.exports = (io) => {
 
     const abletonlink = require('abletonlink');
     const link = new abletonlink();

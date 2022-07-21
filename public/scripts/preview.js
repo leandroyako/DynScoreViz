@@ -43,17 +43,17 @@ socket.on("preview staff", (route, svg) => {
     const svgRoute = `../svg/${route}/tmp_prev/${svg}.cropped.svg`
     previewSlot.data = svgRoute
     console.log(svgRoute)
-    modal = previewModal //to get close button to work
-    if (modal.getAttribute('open')) {
-        closeModal(modal)
+    //modal = previewModal //to get close button to work
+    if (previewModal.getAttribute('open')) {
+        closeModal(previewModal)
     }
-    openModal(modal)
+    openModal(previewModal)
 })
 
 socket.on('clear preview', (route) => {
     console.log("clear preview", route)
 
-    if (modal.getAttribute('open')) {
-        closeModal(modal)
+    if (previewModal.getAttribute('open')) {
+        closeModal(previewModal)
     }
 })

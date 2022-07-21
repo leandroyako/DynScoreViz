@@ -1,8 +1,7 @@
-let modal;
-
 document.addEventListener("click", (e) => {
+    modal = document.getElementById(e.target.dataset.id);
+
     if (e.target.className === "modal-open") {
-        modal = document.getElementById(e.target.dataset.id);
         openModal(modal);
     } else if (e.target.className === "modal-close") {
         closeModal(modal);

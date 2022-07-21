@@ -148,7 +148,7 @@ updateStaves(staves) //data sent through view_part.render
 socket.on('update', (staves) => {
     staves = JSON.parse(staves)
     updateStaves(staves) //new data from server sent through socket
-    if (modal.getAttribute('open')) {
-        closeModal(modal)
+    if (previewModal.getAttribute('open')) {
+        closeModal(previewModal)
     }
 })
