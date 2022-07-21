@@ -1,3 +1,6 @@
+#Temp svgs
+./public/svg/
+
 # Logs
 logs
 *.log
